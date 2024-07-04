@@ -15,16 +15,14 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see Rails configuration guide
-  # https://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
-development:
-  <<: *default
   host: <%= ENV['DATABASE_HOST'] %>
   port: <%= ENV['DATABASE_PORT'] %>
   username: <%= ENV['DATABASE_USERNAME'] %>
   password: <%= ENV['DATABASE_PASSWORD'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
   database: <%= ENV['DATABASE_NAME'] %>_development
 
   # The specified database role being used to connect to PostgreSQL.
@@ -59,7 +57,7 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: messanger_test
+  database: <%= ENV['DATABASE_NAME'] %>_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -83,6 +81,6 @@ test:
 #
 production:
   <<: *default
-  database: messanger_production
+  database: <%= ENV['DATABASE_NAME'] %>_production
   username: messanger
   password: <%= ENV["MESSANGER_DATABASE_PASSWORD"] %>
