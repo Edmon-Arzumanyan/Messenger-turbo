@@ -1,0 +1,27 @@
+<%= turbo_stream_from [current_user, "chats"] %>
+<%= current_user.email %>
+<div class="border w-full bg-gray-100 h-screen">
+  <div class="w-full bg-green-400 flex justify-between p-4">
+    <h1>chats</h1>
+    <%= link_to "New chat",
+                new_chat_path,
+                class: "btn btn--primary",
+                data: { turbo_frame: dom_id(Chat.new) } %>
+  </div>
+
+  <%= turbo_frame_tag dom_id(Chat.new) %>
+
+  <div class="flex h-[95%]">
+    <div class="w-1/5 bg-green-500 h-full">
+      <%= turbo_frame_tag "chats" do %>
+        <% @chats.each do |chat| %>
+          <%= render partial: "chats/chat", locals: { chat: chat, user: current_user.id } %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="w-4/5 bg-gray-500 h-full overflow-auto">
+      <%= turbo_frame_tag 'show' %>
+    </div>
+  </div>
+</div>
