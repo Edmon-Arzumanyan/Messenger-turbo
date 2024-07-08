@@ -1,0 +1,15 @@
+<%= turbo_frame_tag 'show' do %>
+  <%= turbo_stream_from @chat, "messages" %>
+
+  <div class="flex flex-col justify-between h-full">
+    <div class="w-full flex justify-around">
+      <div class="w-[80%] text-center">
+        <%= @chat.title(current_user.id) %>
+      </div>
+      <div class="w-[20%] flex justify-end px-4">
+        <%= button_to "Delete", chat_path(@chat), method: :delete, class: "btn btn--light mr-2" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+

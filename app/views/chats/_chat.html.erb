@@ -1,0 +1,7 @@
+<%= turbo_frame_tag dom_id(chat) do %>
+  <div class="flex w-full bg-red-400">
+    <div class="chat">
+      <%= link_to chat.title(user), chat_path(chat), data: { turbo_frame: 'show' } %>
+    </div>
+  </div>
+<% end %>

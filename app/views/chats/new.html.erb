@@ -1,0 +1,11 @@
+<main class="container">
+  <%= link_to sanitize("&larr; Back to chats"), chats_path %>
+
+  <div class="header">
+    <h1>New chat</h1>
+  </div>
+
+  <%= turbo_frame_tag @chat do %>
+    <%= render "form", chat: @chat %>
+  <% end %>
+</main>

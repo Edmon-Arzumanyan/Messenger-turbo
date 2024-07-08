@@ -1,0 +1,9 @@
+<%= form_for chat, html: { class: "chat form" } do |f| %>
+  <% if chat.errors.any? %>
+    <%= chat.errors.full_messages %>
+  <% end %>
+
+  <%= f.select :user_2_id, User.all.pluck(:email, :id) %>
+  <%= link_to "Cancel", chats_path, class: "btn btn--light" %>
+  <%= f.submit class: "btn btn--secondary" %>
+<% end %>
