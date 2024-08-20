@@ -5,5 +5,7 @@ Rails.application.routes.draw do
   root 'chats#index'
 
   devise_for :users
-  resources :chats, except: %i[edit update]
+  resources :chats, except: %i[edit update] do
+    resources :messages
+  end
 end

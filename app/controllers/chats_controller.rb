@@ -13,21 +13,23 @@ class ChatsController < ApplicationController
   end
 
   def show
+    @message = current_user.messages.new
+    @messages = @chat.messages.order(created_at: :asc)
+    @messages.unread.where.not(user_id: current_user.id).update_all(status: 'read')
   end
 
-def create
-  @chat = current_user.initiated_chats.build(chat_params)
+  def create
+    @chat = current_user.initiated_chats.build(chat_params)
 
-  if @chat.save
-    respond_to do |format|
-      format.html { redirect_to chat_url(@chat), notice: 'Chat was successfully created.' }
-      format.turbo_stream { flash.now[:notice] = 'Chat was successfully created.' }
+    if @chat.save
+      respond_to do |format|
+        format.html { redirect_to chat_url(@chat), notice: 'Chat was successfully created.' }
+        format.turbo_stream { flash.now[:notice] = 'Chat was successfully created.' }
+      end
+    else
+      render :new
     end
-  else
-    render :new
   end
-end
-
 
   def update
     if @chat.update(chat_params)
@@ -43,11 +45,18 @@ end
   def edit; end
 
   def destroy
-    @chat.destroy
+    if @chat.destroy
 
-    respond_to do |format|
-      format.html { redirect_to chat_path, notice: 'chat was successfully destroyed.' }
-      format.turbo_stream { flash.now[:notice] = 'chat was successfully destroyed.' }
+      respond_to do |format|
+        format.html { redirect_to chat_path, notice: 'chat was successfully destroyed.' }
+        format.turbo_stream { flash.now[:notice] = 'chat was successfully destroyed.' }
+      end
+    else
+
+      respond_to do |format|
+        format.html { redirect_to chat_path, notice: 'chat was successfully destroyed.' }
+        format.turbo_stream { flash.now[:notice] = 'chat was successfully destroyed.' }
+      end
     end
   end
 
