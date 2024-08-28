@@ -1,0 +1,81 @@
+<%= turbo_frame_tag dom_id(message) do %>
+  <% user_message = message if message.user == user %>
+  <% other_user_message = message if message.user != user %>
+
+  <div class="flex justify-between mx-4">
+    <div class="w-1/2 flex flex-col items-start">
+      <% if other_user_message.present? %>
+        <% if message.body.present? %>
+          <p class="my-2 bg-gray-200 p-4 rounded-lg">
+            <%= other_user_message.body %>
+          </p>
+        <% end %>
+        <% if message.files.attached? %>
+          <% message.files.each do |attachment| %>
+            <% if attachment.image? %>
+              <%= link_to rails_blob_path(attachment), target: "_blank" do %>
+                <%= image_tag attachment, width: "200px" %>
+              <% end %>
+            <% elsif attachment.audio? %>
+              <audio controls>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </audio>
+            <% elsif attachment.video? %>
+              <video controls>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </video>
+            <% else %>
+              <p class="my-2 bg-gray-200 p-4 rounded-lg flex">
+                <span class="material-symbols-outlined">
+                  description
+                </span>
+                <%= link_to attachment.filename, rails_blob_path(attachment, disposition: "attachment") %>
+              </p>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="w-1/2 flex flex-col items-end">
+      <% if user_message.present? %>
+        <% if message.body.present? %>
+          <p class="my-2 bg-blue-500 text-white p-4 rounded-lg">
+            <%= user_message.body %>
+          </p>
+        <% end %>
+        <% if message.files.attached? %>
+          <% message.files.each do |attachment| %>
+            <% if attachment.image? %>
+              <%= link_to rails_blob_path(attachment), target: "_blank" do %>
+                <%= image_tag attachment, width: "200px" %>
+              <% end %>
+            <% elsif attachment.audio? %>
+              <audio controls muted>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </audio>
+            <% elsif attachment.video? %>
+              <video controls muted>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </video>
+            <% else %>
+              <p class="my-2 bg-blue-500 text-white p-4 rounded-lg flex">
+                <span class="material-symbols-outlined">
+                  description
+                </span>
+                <%= link_to attachment.filename, rails_blob_path(attachment, disposition: "attachment") %>
+              </p>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+<% end %>
+  <script type='text/javascript'>
+  div.scrollTo(0, div.scrollHeight)
+  message.value = ''
+  files.value = ''
+</script>
+

@@ -1,7 +1,12 @@
-<%= turbo_frame_tag dom_id(chat) do %>
-  <div class="flex w-full bg-red-400">
-    <div class="chat">
-      <%= link_to chat.title(user), chat_path(chat), data: { turbo_frame: 'show' } %>
+<%= turbo_frame_tag "#{user}_#{dom_id(chat)}" do %>
+  <div class="flex justify-between w-full bg-red-400 p-2">
+    <div class="caht">
+  <%= link_to chat.title(user), chat_path(chat), data: { turbo_frame: "#{user}_show"} %>
+
+    </div>
+
+    <div class="flex justify-end  bg-white text-red-500 rounded-xl py-1 px-2">
+      <%= chat.messages.unread.where.not(user_id: user).count %>
     </div>
   </div>
 <% end %>
