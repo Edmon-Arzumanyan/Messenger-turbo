@@ -9,6 +9,10 @@ class Chat < ApplicationRecord
 
   validates :user_1_id, uniqueness: { scope: :user_2_id }
 
+  after_create_commit :broadcast_chat_prepend
+  after_destroy_commit :broadcast_chat_remove
+  after_update_commit :broadcast_chat_replace
+
   def title(current_user_id)
     if user_1_id == current_user_id
       user_2.email
@@ -19,23 +23,29 @@ class Chat < ApplicationRecord
     end
   end
 
-  after_create_commit do
-    broadcast_prepend_to [user_2, 'chats'], partial: 'chats/chat', locals: { chat: self, user:  user_2.id }
-    broadcast_prepend_to [user_1, 'chats'], partial: 'chats/chat', locals: { chat: self, user:  user_1.id }
+  def unread_messages_count(user_id)
+    messages.unread.where.not(user_id: user_id).count
   end
 
-after_destroy_commit do
-  broadcast_remove_to [user_2, 'chats'], target: "chat_#{self.id}"
-  broadcast_remove_to [user_1, 'chats'], target: "chat_#{self.id}"
-  broadcast_update_to "#{user_1.id}_show", target: "#{user_1.id}_show", partial: 'chats/deleted', locals: { chat: self }
-  broadcast_update_to "#{user_2.id}_show", target: "#{user_2.id}_show", partial: 'chats/deleted', locals: { chat: self }
-end
+  private
 
-
-  after_update_commit do
-    broadcast_replace_to [user_2, 'chats'], partial: 'chats/chat', locals: { chat: self, user: user_2.id }
-    broadcast_replace_to [user_1, 'chats'], partial: 'chats/chat', locals: { chat: self, user: user_1.id }
+  def broadcast_chat_prepend
+    [user_1, user_2].each do |chat_user|
+      broadcast_prepend_to [chat_user, 'chats'], partial: 'chats/chat', locals: { chat: self, user: chat_user.id }
+    end
   end
 
-  # broadcasts_to ->(chat) { [(chat.user_2 || chat.user_1), 'chats'] }, inserts_by: :prepend
+  def broadcast_chat_remove
+    [user_1, user_2].each do |chat_user|
+      frame_id = "#{chat_user.id}_#{dom_id(self)}"
+      broadcast_remove_to [chat_user, 'chats'], target: frame_id
+    end
+  end
+
+
+  def broadcast_chat_replace
+    [user_1, user_2].each do |chat_user|
+      broadcast_replace_to  "#{chat_user.id}_#{dom_id(chat)}", partial: 'chats/chat', locals: { chat: self, user: chat_user.id }
+    end
+  end
 end

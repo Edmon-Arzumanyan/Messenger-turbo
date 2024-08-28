@@ -1,3 +1,5 @@
-web: env RUBY_DEBUG_OPEN=true bin/rails server
-js: yarn build --watch
+database: bash -c "pg_ctl restart && tail -f /dev/null"
+redis: redis-server
+
 css: bin/rails tailwindcss:watch
+web: bin/rails server -p 3000

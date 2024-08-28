@@ -1,12 +1,11 @@
 <%= turbo_frame_tag "#{current_user.id}_show" do %>
-
   <div class="flex flex-col justify-between h-full">
     <div class="w-full flex justify-around">
       <div class="w-[80%] text-center">
         <%= @chat.title(current_user.id) %>
       </div>
       <div class="w-[20%] flex justify-end px-4">
-        <%= button_to "Delete", chat_path(@chat), method: :delete, class: "btn btn--light mr-2" %>
+        <%= button_to "Delete", chat_path(@chat),data: { turbo_frame: '_top'}, method: :delete, class: "btn btn--light mr-2" %>
       </div>
     </div>
 
