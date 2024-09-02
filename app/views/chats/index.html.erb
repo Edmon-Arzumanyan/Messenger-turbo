@@ -1,6 +1,5 @@
 <%= turbo_stream_from [current_user, "chats"] %>
-<%= turbo_stream_from  [current_user, "messages" ]%>
-<%= turbo_stream_from  "#{current_user.id}_show" %>
+<%# <%= turbo_stream_from  "#{current_user.id}_show" %>
 
 <%= current_user.email %>
 <div class="border w-full bg-gray-100 h-screen">
@@ -18,8 +17,6 @@
     <div class="w-1/5 bg-green-500 h-full">
       <%= turbo_frame_tag "chats" do %>
         <% @chats.each do |chat| %>
-          <%= turbo_stream_from "#{current_user.id}_#{dom_id(chat)}" %>
-
           <%= render partial: "chats/chat", locals: { chat: chat, user: current_user.id } %>
         <% end %>
       <% end %>

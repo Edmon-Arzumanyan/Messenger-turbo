@@ -1,0 +1,30 @@
+<%= turbo_stream_from @chat %>
+<%= turbo_frame_tag @chat do %>
+  <%= turbo_stream_from  [current_user, @chat, "messages" ]%>
+  <div class="flex flex-col justify-between h-full">
+    <div class="w-full flex justify-around">
+      <div class="w-[80%] text-center">
+        <%= @chat.title(current_user.id) %>
+      </div>
+      <div class="w-[20%] flex justify-end px-4">
+        <%= button_to "Delete", chat_path(@chat), method: :delete, class: "btn btn--light mr-2" %>
+      </div>
+    </div>
+
+    <div class="flex-grow overflow-y-auto content" id="div">
+      <%= turbo_frame_tag "messages" do %>
+        <% @messages.each do |message| %>
+          <%= render partial: "messages/message", locals: { message: message, user: current_user } %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%= form_with(model: [@chat, @message], local: true) do |f| %>
+      <div class="flex">
+        <%= f.text_area :body, id: 'message', class: "shadow appearance-none border rounded w-full  text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
+        <%= f.file_field :files,multiple: true, id: 'files', class: "shadow appearance-none border rounded w-full  text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
+        <%= f.submit 'send', class: "material-symbols-outlined h-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

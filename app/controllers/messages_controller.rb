@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
         format.html { redirect_to chats_url, notice: 'chat was successfully created.' }
         format.turbo_stream
       end
-   end
+    end
   end
 
   # PATCH/PUT /messages/1 or /messages/1.json
@@ -53,7 +53,7 @@ class MessagesController < ApplicationController
       end
     else
       format.json { render json: @message.errors, status: :unprocessable_entity }
-  end
+    end
   end
 
   private
@@ -66,7 +66,7 @@ class MessagesController < ApplicationController
   def set_chat
     @chat = Chat.find_by_id(params[:chat_id])
     render :index, status: :not_found unless @chat
-end
+  end
 
   # Only allow a list of trusted parameters through.
   def message_params

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ChatsController < ApplicationController
+  include ActionView::RecordIdentifier
+
   before_action :authenticate_user!
   before_action :set_chat, only: %i[show edit update destroy]
 
@@ -16,6 +18,28 @@ class ChatsController < ApplicationController
     @message = current_user.messages.new
     @messages = @chat.messages.order(created_at: :asc)
     @messages.unread.where.not(user_id: current_user.id).update_all(status: 'read')
+
+    respond_to do |format|
+      format.html do
+        render :show
+      end
+      
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(
+            "#{current_user.id}_#{dom_id(@chat)}",
+            target: "#{current_user.id}_#{dom_id(@chat)}",
+            partial: 'chats/chat',
+            locals: { chat: @chat, user: current_user.id }
+          ),
+          turbo_stream.update(
+            "#{current_user.id}_show",
+            partial: 'chats/show',
+            locals: { chat: @chat }
+          )
+        ]
+      end
+    end
   end
 
   def create

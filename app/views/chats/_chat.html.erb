@@ -1,7 +1,8 @@
+<%= turbo_stream_from "#{user}_#{dom_id(chat)}" %>
 <%= turbo_frame_tag "#{user}_#{dom_id(chat)}" do %>
   <div class="flex justify-between w-full bg-red-400 p-2">
     <div class="caht">
-      <%= link_to chat.title(user), chat_path(chat), data: { turbo_frame: "#{user}_show"} %>
+      <%= link_to chat.title(user), chat_path(chat), data: { turbo_stream: true } %>
     </div>
 
     <% if chat.unread_messages_count(user) > 0 %>

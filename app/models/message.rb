@@ -19,16 +19,17 @@ class Message < ApplicationRecord
 
   def broadcast_message_to_users
     [chat.user_1, chat.user_2].each do |chat_user|
-      broadcast_append_to [chat_user, 'messages'], partial: 'messages/message', locals: { message: self, user: chat_user }
+      broadcast_append_to [chat_user, chat, 'messages'], partial: 'messages/message',
+                                                         locals: { message: self, user: chat_user }
     end
   end
 
   def update_chat_display
     [chat.user_1, chat.user_2].each do |chat_user|
-      broadcast_replace_to "#{chat_user.id}_#{dom_id(chat)}",
-                           target: "#{chat_user.id}_#{dom_id(chat)}",
-                           partial: 'chats/chat',
-                           locals: { chat: chat, user: chat_user.id }
+      broadcast_update_to "#{chat_user.id}_#{dom_id(chat)}",
+                          target: "#{chat_user.id}_#{dom_id(chat)}",
+                          partial: 'chats/chat',
+                          locals: { chat:, user: chat_user.id }
     end
   end
 end

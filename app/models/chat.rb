@@ -24,7 +24,7 @@ class Chat < ApplicationRecord
   end
 
   def unread_messages_count(user_id)
-    messages.unread.where.not(user_id: user_id).count
+    messages.unread.where.not(user_id:).count
   end
 
   private
@@ -39,13 +39,14 @@ class Chat < ApplicationRecord
     [user_1, user_2].each do |chat_user|
       frame_id = "#{chat_user.id}_#{dom_id(self)}"
       broadcast_remove_to [chat_user, 'chats'], target: frame_id
+      broadcast_remove_to self, target: self
     end
   end
 
-
   def broadcast_chat_replace
     [user_1, user_2].each do |chat_user|
-      broadcast_replace_to  "#{chat_user.id}_#{dom_id(chat)}", partial: 'chats/chat', locals: { chat: self, user: chat_user.id }
+      broadcast_replace_to "#{chat_user.id}_#{dom_id(chat)}", partial: 'chats/chat',
+                                                              locals: { chat: self, user: chat_user.id }
     end
   end
 end
