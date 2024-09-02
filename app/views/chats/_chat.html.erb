@@ -1,12 +1,14 @@
 <%= turbo_stream_from "#{user}_#{dom_id(chat)}" %>
 <%= turbo_frame_tag "#{user}_#{dom_id(chat)}" do %>
-  <div class="flex justify-between w-full bg-red-400 p-2">
-    <div class="caht">
-      <%= link_to chat.title(user), chat_path(chat), data: { turbo_stream: true } %>
+  <div class="flex justify-between items-center w-full bg-gray-300 text-black border-b border-b-gray-500 p-2 shadow-sm">
+    <!-- Chat Title -->
+    <div class="font-semibold">
+      <%= link_to chat.title(user), chat_path(chat), class: "hover:underline", data: { turbo_stream: true } %>
     </div>
 
+    <!-- Unread Messages Count -->
     <% if chat.unread_messages_count(user) > 0 %>
-    <div class="flex justify-end  bg-white text-red-500 rounded-xl py-1 px-2">
+    <div class="flex items-center bg-white text-blue-500 rounded-full px-3 py-1 text-sm font-medium">
       <%= chat.unread_messages_count(user) %>
     </div>
     <% end %>

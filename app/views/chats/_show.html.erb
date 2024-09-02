@@ -1,17 +1,19 @@
 <%= turbo_stream_from @chat %>
 <%= turbo_frame_tag @chat do %>
-  <%= turbo_stream_from  [current_user, @chat, "messages" ]%>
-  <div class="flex flex-col justify-between h-full">
-    <div class="w-full flex justify-around">
-      <div class="w-[80%] text-center">
+  <%= turbo_stream_from [current_user, @chat, "messages" ] %>
+  <div class="flex flex-col h-full p-4">
+    <!-- Chat Header -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="text-lg font-semibold flex-1 text-center">
         <%= @chat.title(current_user.id) %>
       </div>
-      <div class="w-[20%] flex justify-end px-4">
-        <%= button_to "Delete", chat_path(@chat), method: :delete, class: "btn btn--light mr-2" %>
+      <div class="flex-shrink-0">
+        <%= button_to "Delete chat", chat_path(@chat), method: :delete, class: "bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400" %>
       </div>
     </div>
 
-    <div class="flex-grow overflow-y-auto content" id="div">
+    <!-- Messages Section -->
+    <div class="flex-grow overflow-y-auto bg-white p-4 rounded-lg shadow-md mb-4" id="div">
       <%= turbo_frame_tag "messages" do %>
         <% @messages.each do |message| %>
           <%= render partial: "messages/message", locals: { message: message, user: current_user } %>
@@ -19,11 +21,12 @@
       <% end %>
     </div>
 
+    <!-- Message Form -->
     <%= form_with(model: [@chat, @message], local: true) do |f| %>
-      <div class="flex">
-        <%= f.text_area :body, id: 'message', class: "shadow appearance-none border rounded w-full  text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
-        <%= f.file_field :files,multiple: true, id: 'files', class: "shadow appearance-none border rounded w-full  text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
-        <%= f.submit 'send', class: "material-symbols-outlined h-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline cursor-pointer" %>
+      <div class="flex flex-col space-y-4">
+        <%= f.text_area :body, id: 'message', class: "shadow appearance-none border rounded-lg w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
+        <%= f.file_field :files, multiple: true, id: 'files', class: "shadow appearance-none border rounded-lg w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        <%= f.submit 'Send', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer" %>
       </div>
     <% end %>
   </div>

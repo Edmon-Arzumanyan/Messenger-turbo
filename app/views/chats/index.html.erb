@@ -1,29 +1,35 @@
 <%= turbo_stream_from [current_user, "chats"] %>
-<%# <%= turbo_stream_from  "#{current_user.id}_show" %>
 
-<%= current_user.email %>
-<div class="border w-full bg-gray-100 h-screen">
-  <div class="w-full bg-green-400 flex justify-between p-4">
-    <h1>chats</h1>
-    <%= link_to "New chat",
+<div class="border w-full bg-gray-100 h-screen flex flex-col">
+  <header class="bg-gray-800 text-white flex justify-between p-4 shadow-md">
+    <div>
+      <h1 class="text-lg font-semibold mb-4">Chats</h1>
+      <%= link_to "New Chat",
                 new_chat_path,
-                class: "btn btn--primary",
+                class: "bg-blue-500 text-white py-2 px-4 hover:bg-blue-600",
                 data: { turbo_frame: dom_id(Chat.new) } %>
-  </div>
+    </div>
+    <h3 class="text-lg font-semibold"><%= current_user.email %></h3>
+    <%= button_to 'Log out',
+                      destroy_user_session_path,
+                      method: :delete,
+                      class: 'border px-6 py-2 border-none bg-red-700 text-white mb-4' %>
+  </header>
 
-  <%= turbo_frame_tag dom_id(Chat.new) %>
 
-  <div class="flex h-[95%]">
-    <div class="w-1/5 bg-green-500 h-full">
+  <div class="flex flex-1 h-[80%]">
+    <aside class="w-1/5 bg-gray-800 text-white overflow-y-auto">
+      <%= turbo_frame_tag dom_id(Chat.new) %>
+
       <%= turbo_frame_tag "chats" do %>
         <% @chats.each do |chat| %>
           <%= render partial: "chats/chat", locals: { chat: chat, user: current_user.id } %>
         <% end %>
       <% end %>
-    </div>
+    </aside>
 
-    <div class="w-4/5 bg-gray-500 h-full overflow-auto">
+    <main class="w-4/5 bg-gray-100 overflow-auto">
       <%= turbo_frame_tag "#{current_user.id}_show" %>
-    </div>
+    </main>
   </div>
 </div>
