@@ -18,7 +18,9 @@ class Message < ApplicationRecord
   private
 
   def mark_chat_as_read
-    chat.messages.unread.where.not(user_id: user.id).update_all(status: 'read')
+    chat.messages.unread.where.not(user_id: user.id).each do |message|
+      message.update(status: 'read')
+    end
   end
 
   def broadcast_message_to_users

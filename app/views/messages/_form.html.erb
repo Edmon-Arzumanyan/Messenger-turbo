@@ -1,10 +1,33 @@
 <%= turbo_frame_tag "message_form" do %>
+
   <%= form_with(model: [chat, message], local: true) do |f| %>
+    <% if message.persisted? || message.parent_id.present? %>
+      <% action = message.persisted? ? 'Editing' : 'Replying' %>
+      <%= link_to "Cancel #{action}", new_chat_message_path(chat), data: { turbo_stream: true },
+                  class: "text-blue-500 hover:text-blue-700 underline font-medium text-sm mb-4 block" %>
+    <% end %>
+
+    <%= f.hidden_field :parent_id, value: message.parent_id %>
+
     <div class="flex flex-col space-y-4">
-      <%= f.hidden_field :parent_id, value: message.parent_id %>
-      <%= f.text_area :body, id: 'message', class: "shadow appearance-none border rounded-lg w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none" %>
-      <%= f.file_field :files, multiple: true, id: 'files', class: "shadow appearance-none border rounded-lg w-full p-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
-      <%= f.submit 'Send', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer" %>
+      <!-- File Upload Field -->
+      <div class="flex justify-between items-center">
+        <div class="relative">
+          <%= f.file_field :files, multiple: true, id: 'files',
+                           class: "shadow-sm border border-gray-300 rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer" %>
+        </div>
+
+        <!-- Submit Button -->
+        <%= f.submit 'Send',
+              class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" %>
+      </div>
+
+      <!-- Message Text Area -->
+      <div class="relative">
+        <%= f.text_area :body, id: 'message',
+                        placeholder: "Write your message...",
+                        class: "shadow-sm border border-gray-300 rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none placeholder-gray-400" %>
+      </div>
     </div>
   <% end %>
 <% end %>

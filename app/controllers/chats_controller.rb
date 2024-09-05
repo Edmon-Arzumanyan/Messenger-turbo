@@ -17,7 +17,10 @@ class ChatsController < ApplicationController
   def show
     @message = current_user.messages.new
     @messages = @chat.messages.order(created_at: :asc)
-    @messages.unread.where.not(user_id: current_user.id).update_all(status: 'read')
+
+    @messages.unread.where.not(user_id: current_user.id).find_each do |message|
+      message.update(status: 'read')
+    end
 
     respond_to do |format|
       format.html do
