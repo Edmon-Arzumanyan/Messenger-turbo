@@ -10,7 +10,24 @@ class MessagesController < ApplicationController
   end
 
   # GET /messages/1/edit
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.html do
+        render :edit
+      end
+
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(
+            "message_form",
+            target: "message_form",
+            partial: 'messages/form',
+            locals: { chat: @chat, message: @message }
+          )
+        ]
+      end
+    end
+  end
 
   # POST /messages or /messages.json
   def create
@@ -36,9 +53,20 @@ class MessagesController < ApplicationController
       if @message.update(message_params)
         format.html { redirect_to message_url(@message), notice: 'Message was successfully updated.' }
         format.json { render :show, status: :ok, location: @message }
+        format.turbo_stream do
+          render turbo_stream: [
+          turbo_stream.replace(
+            "message_form",
+            target: "message_form",
+            partial: 'messages/form',
+            locals: { chat: @chat, message: Message.new }
+          )
+        ]
+        end
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
+        format.turbo_stream
       end
     end
   end
@@ -46,13 +74,23 @@ class MessagesController < ApplicationController
   # DELETE /messages/1 or /messages/1.json
   def destroy
     if @message.destroy
-
       respond_to do |format|
-        format.html { redirect_to messages_url, notice: 'Message was successfully destroyed.' }
+        format.html { redirect_to messages_path, notice: 'Message was successfully destroyed.' }
         format.json { head :no_content }
+        format.turbo_stream do
+          render turbo_stream: [
+          turbo_stream.replace(
+            "message_form",
+            target: "message_form",
+            partial: 'messages/form',
+            locals: { chat: @chat, message: Message.new }
+          )
+        ]
+        end
       end
     else
       format.json { render json: @message.errors, status: :unprocessable_entity }
+      format.turbo_stream
     end
   end
 
@@ -60,7 +98,7 @@ class MessagesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_message
-    @message = Message.find(params[:id])
+    @message = @chat.messages.find_by_id(params[:id])
   end
 
   def set_chat

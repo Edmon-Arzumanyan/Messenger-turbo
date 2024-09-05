@@ -35,7 +35,7 @@ class ChatsController < ApplicationController
           turbo_stream.update(
             "#{current_user.id}_show",
             partial: 'chats/show',
-            locals: { chat: @chat }
+            locals: { chat: @chat, user: current_user }
           )
         ]
       end

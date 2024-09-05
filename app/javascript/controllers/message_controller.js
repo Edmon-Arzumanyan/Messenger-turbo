@@ -1,20 +1,23 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
+  static targets = ["messages", "messageBody", "files"]
+
   connect() {
     this.scrollToBottom();
-    clearMessageInput()
-    console.log('dwad')
+    console.log('Message controller connected');
+  }
+
+  submit() {
+    this.scrollToBottom();
+    this.clearMessageInput();
   }
 
   scrollToBottom() {
-    this.element.scrollTop = this.element.scrollHeight;
+    this.messagesTarget.scrollTop = this.messagesTarget.scrollHeight;
   }
 
   clearMessageInput() {
-    const messageInput = this.element.querySelector("textarea");
-    if (messageInput) {
-      messageInput.value = '';
-    }
+    this.messageBodyTarget.value = '';
   }
 }

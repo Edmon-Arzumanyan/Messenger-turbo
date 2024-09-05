@@ -1,47 +1,74 @@
-<%= turbo_frame_tag dom_id(message) do %>
-  <% message_class = message.user == user ? 'bg-blue-500 text-white' : 'bg-gray-200' %>
+<%= turbo_stream_from [user, message] %>
+<%= turbo_frame_tag message do %>
+  <% message_class = message.user == user ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800' %>
   <% message_align = message.user == user ? 'items-end' : 'items-start' %>
 
-  <div class="flex justify-between mx-4">
-    <div class="w-full flex flex-col <%= message_align %>">
+  <div class="flex justify-between px-6 py-3">
+    <div class="w-full flex flex-col <%= message_align %> space-y-2">
       <% if message.body.present? %>
-        <p class="my-2 <%= message_class %> p-4 rounded-lg">
-          <%= message.body %>
-        </p>
+        <div class="<%= message_class %> p-4 rounded-2xl shadow-sm max-w-lg">
+          <p><%= message.body %></p>
+        </div>
       <% end %>
 
       <% if message.files.attached? %>
         <% message.files.each do |attachment| %>
           <% case attachment.content_type %>
           <% when /^image/ %>
-            <%= link_to rails_blob_path(attachment), target: "_blank" do %>
-              <%= image_tag attachment, width: "200px" %>
-            <% end %>
+            <div class="rounded-lg overflow-hidden shadow-lg">
+              <%= link_to rails_blob_path(attachment), target: "_blank" do %>
+                <%= image_tag attachment, class: "w-full h-auto" %>
+              <% end %>
+            </div>
           <% when /^audio/ %>
-            <audio controls <%= 'muted' if message.user == user %>>
-              <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
-            </audio>
+            <div class="w-full rounded-lg overflow-hidden shadow-sm bg-white p-2">
+              <audio controls>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </audio>
+            </div>
           <% when /^video/ %>
-            <video controls <%= 'muted' if message.user == user %>>
-              <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
-            </video>
+            <div class="w-full rounded-lg overflow-hidden shadow-sm bg-white p-2">
+              <video controls>
+                <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
+              </video>
+            </div>
           <% else %>
-            <p class="my-2 <%= message_class %> p-4 rounded-lg flex">
-              <span class="material-symbols-outlined">
-                description
-              </span>
-              <%= link_to attachment.filename, rails_blob_path(attachment, disposition: "attachment") %>
-            </p>
+            <div class="<%= message_class %> p-4 rounded-lg shadow-sm flex items-center space-x-2">
+              <span class="material-symbols-outlined">description</span>
+              <%= link_to attachment.filename, rails_blob_path(attachment, disposition: "attachment"), class: "underline" %>
+            </div>
           <% end %>
         <% end %>
       <% end %>
+
+      <div class="flex items-center space-x-2 text-xs text-gray-500 mt-1">
+        <span class="font-medium"><%= message.created_at.strftime('%H:%M') %></span>
+        <% if message.user == user %>
+          <span class="material-symbols-outlined <%= message.status == 'read' ? 'text-green-500' : 'text-gray-400' %>">
+            <%= message.status == 'read' ? 'done_all' : 'check' %>
+          </span>
+        <% end %>
+
+        <% if message.user == user %>
+          <div class="flex space-x-2 mt-2">
+            <%= link_to 'edit', edit_chat_message_path(message.chat, message), data: { turbo_stream: true },
+            class: 'bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-full text-xs' %>
+
+            <%= button_to 'Delete', [message.chat, message],
+                method: :delete,
+                class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-full text-xs',
+                data: { turbo_confirm: 'Are you sure you want to delete this message?' } %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>
 
-  <script type='text/javascript'>
-  div.scrollTo(0, div.scrollHeight)
-  message.value = ''
-  files.value = ''
+<script type='text/javascript'>
+  setTimeout(function() {
+      div.scrollTo(0, div.scrollHeight);
+      message.value = '';
+      files.value = '';
+  }, 100);
 </script>
-

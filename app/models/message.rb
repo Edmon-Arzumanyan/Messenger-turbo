@@ -8,6 +8,8 @@ class Message < ApplicationRecord
   validates :body, presence: true, unless: -> { files.attached? }
 
   after_create_commit :mark_chat_as_read, :broadcast_message_to_users, :update_chat_display
+  after_destroy_commit :broadcast_message_remove
+  after_update_commit :broadcast_message_update
 
   enum status: { unread: 0, read: 1 }
 
@@ -30,6 +32,18 @@ class Message < ApplicationRecord
                           target: "#{chat_user.id}_#{dom_id(chat)}",
                           partial: 'chats/chat',
                           locals: { chat:, user: chat_user.id }
+    end
+  end
+
+  def broadcast_message_remove
+    [chat.user_1, chat.user_2].each do |chat_user|
+      broadcast_remove_to [chat_user, self], target: self
+    end
+  end
+
+  def broadcast_message_update
+    [chat.user_1, chat.user_2].each do |chat_user|
+     broadcast_update_to [chat_user, self], target: self, partial: 'messages/message', locals: { message: self, user: chat_user }
     end
   end
 end
