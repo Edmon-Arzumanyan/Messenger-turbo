@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   devise_for :users
   resources :chats, except: %i[edit update] do
     resources :messages
+    get 'reply-message/:id', to: 'messages#reply', as: 'reply_message'
   end
 end

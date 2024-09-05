@@ -2,11 +2,27 @@
 
 class MessagesController < ApplicationController
   before_action :set_chat
-  before_action :set_message, only: %i[edit update destroy]
+  before_action :set_message, only: %i[edit update destroy reply]
 
   # GET /messages/new
   def new
     @message = Message.new
+  end
+
+  def reply
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(
+            "message_form",
+            target: "message_form",
+            partial: 'messages/form',
+            locals: { chat: @chat, message: @message.children.new }
+          )
+        ]
+      end
+    end
   end
 
   # GET /messages/1/edit
@@ -37,7 +53,16 @@ class MessagesController < ApplicationController
     if @message.save
       respond_to do |format|
         format.html { redirect_to chats_url, notice: 'chat was successfully created.' }
-        format.turbo_stream
+        format.turbo_stream do
+          render turbo_stream: [
+          turbo_stream.replace(
+            "message_form",
+            target: "message_form",
+            partial: 'messages/form',
+            locals: { chat: @chat, message: Message.new }
+          )
+        ]
+        end
       end
     else
       respond_to do |format|
@@ -108,6 +133,6 @@ class MessagesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def message_params
-    params.require(:message).permit(:body, files: [])
+    params.require(:message).permit(:parent_id, :body, files: [])
   end
 end

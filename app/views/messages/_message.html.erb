@@ -3,11 +3,14 @@
   <% message_class = message.user == user ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800' %>
   <% message_align = message.user == user ? 'items-end' : 'items-start' %>
 
-  <div class="flex justify-between px-6 py-3">
-    <div class="w-full flex flex-col <%= message_align %> space-y-2">
+  <div class="flex justify-between px-6 py-4 border-b border-gray-300">
+    <div class="w-full flex flex-col <%= message_align %> space-y-4">
+      <div class="ml-10 mt-4 space-y-6 border-gray-300 pl-4">
+        <%= render partial: 'messages/message', locals: { message: message.parent, user: user } if message.parent.present? %>
+      </div>
       <% if message.body.present? %>
-        <div class="<%= message_class %> p-4 rounded-2xl shadow-sm max-w-lg">
-          <p><%= message.body %></p>
+        <div class="<%= message_class %> p-4 rounded-lg shadow-lg max-w-xl break-words">
+          <p class="leading-relaxed text-sm"><%= message.body %></p>
         </div>
       <% end %>
 
@@ -21,13 +24,13 @@
               <% end %>
             </div>
           <% when /^audio/ %>
-            <div class="w-full rounded-lg overflow-hidden shadow-sm bg-white p-2">
+            <div class="rounded-lg overflow-hidden shadow-sm bg-white p-2">
               <audio controls>
                 <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
               </audio>
             </div>
           <% when /^video/ %>
-            <div class="w-full rounded-lg overflow-hidden shadow-sm bg-white p-2">
+            <div class="rounded-lg overflow-hidden shadow-sm bg-white p-2">
               <video controls>
                 <source src="<%= rails_blob_url(attachment) %>" type="<%= attachment.content_type %>"/>
               </video>
@@ -41,34 +44,35 @@
         <% end %>
       <% end %>
 
-      <div class="flex items-center space-x-2 text-xs text-gray-500 mt-1">
+      <div class="flex items-center space-x-3 text-xs text-gray-400 mt-2">
         <span class="font-medium"><%= message.created_at.strftime('%H:%M') %></span>
         <% if message.user == user %>
           <span class="material-symbols-outlined <%= message.status == 'read' ? 'text-green-500' : 'text-gray-400' %>">
             <%= message.status == 'read' ? 'done_all' : 'check' %>
           </span>
         <% end %>
-
+        <%= link_to 'Reply', chat_reply_message_path(message.chat, message), data: { turbo_stream: true }, class: "text-blue-500 hover:underline" %>
         <% if message.user == user %>
-          <div class="flex space-x-2 mt-2">
-            <%= link_to 'edit', edit_chat_message_path(message.chat, message), data: { turbo_stream: true },
-            class: 'bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded-full text-xs' %>
+          <div class="flex space-x-3 mt-2">
+            <%= link_to 'Edit', edit_chat_message_path(message.chat, message), data: { turbo_stream: true },
+            class: 'bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200' %>
 
             <%= button_to 'Delete', [message.chat, message],
                 method: :delete,
-                class: 'bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-full text-xs',
+                class: 'bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200',
                 data: { turbo_confirm: 'Are you sure you want to delete this message?' } %>
           </div>
         <% end %>
       </div>
     </div>
   </div>
+
+  <script type='text/javascript'>
+    setTimeout(function() {
+        div.scrollTo(0, div.scrollHeight);
+        message.value = '';
+        files.value = '';
+    }, 100);
+  </script>
 <% end %>
 
-<script type='text/javascript'>
-  setTimeout(function() {
-      div.scrollTo(0, div.scrollHeight);
-      message.value = '';
-      files.value = '';
-  }, 100);
-</script>

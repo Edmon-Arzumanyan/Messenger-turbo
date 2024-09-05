@@ -75,6 +75,9 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
+    ancestry (4.3.3)
+      activerecord (>= 5.2.6)
+    awesome_print (1.9.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bigdecimal (3.1.8)
@@ -257,6 +260,8 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  ancestry
+  awesome_print
   bootsnap
   debug
   devise

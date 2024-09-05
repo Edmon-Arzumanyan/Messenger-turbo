@@ -1,6 +1,8 @@
 class Message < ApplicationRecord
   include ActionView::RecordIdentifier
 
+  has_ancestry
+
   belongs_to :user
   belongs_to :chat
   has_many_attached :files, dependent: :destroy
