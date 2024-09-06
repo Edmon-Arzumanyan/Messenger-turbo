@@ -52,7 +52,6 @@ gem 'bootsnap', require: false
 # Flexible authentication solution for Rails with Warden
 gem 'devise'
 
-
 gem 'awesome_print'
 
 # Ancestry is a gem that allows rails ActiveRecord models to be organized as a tree structure (or hierarchy).
