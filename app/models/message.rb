@@ -1,6 +1,4 @@
 class Message < ApplicationRecord
-  include ActionView::RecordIdentifier
-
   has_ancestry
 
   belongs_to :user
@@ -18,36 +16,44 @@ class Message < ApplicationRecord
   private
 
   def mark_chat_as_read
-    chat.messages.unread.where.not(user_id: user.id).each do |message|
-      message.update(status: 'read')
+    chat.messages.unread.where.not(user_id: user.id).update(status: 'read')
+  end
+
+  def broadcast_to_users(&block)
+    return unless chat
+
+    [chat.user_1, chat.user_2].each do |chat_user|
+      block.call(chat_user)
     end
   end
 
   def broadcast_message_to_users
-    [chat.user_1, chat.user_2].each do |chat_user|
+    broadcast_to_users do |chat_user|
       broadcast_append_to [chat_user, chat, 'messages'], partial: 'messages/message',
-                                                         locals: { message: self, user: chat_user }
+                                             locals: { message: self, user: chat_user }
     end
   end
 
   def update_chat_display
-    [chat.user_1, chat.user_2].each do |chat_user|
-      broadcast_update_to "#{chat_user.id}_#{dom_id(chat)}",
-                          target: "#{chat_user.id}_#{dom_id(chat)}",
+    broadcast_to_users do |chat_user|
+      broadcast_update_to [chat_user, chat],
+                          target: chat,
                           partial: 'chats/chat',
-                          locals: { chat:, user: chat_user.id }
+                          locals: { chat:, user: chat_user }
     end
   end
 
   def broadcast_message_remove
-    [chat.user_1, chat.user_2].each do |chat_user|
+    broadcast_to_users do |chat_user|
       broadcast_remove_to [chat_user, self], target: self
     end
   end
 
   def broadcast_message_update
-    [chat.user_1, chat.user_2].each do |chat_user|
-     broadcast_update_to [chat_user, self], target: self, partial: 'messages/message', locals: { message: self, user: chat_user }
+    broadcast_to_users do |chat_user|
+      broadcast_update_to [chat_user, self], target: self,
+                            partial: 'messages/message',
+                            locals: { message: self, user: chat_user }
     end
   end
 end

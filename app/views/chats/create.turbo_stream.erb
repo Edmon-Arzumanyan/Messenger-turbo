@@ -1,2 +1,1 @@
-<%= turbo_stream.prepend current_user, "chats", partial: "chats/chat", locals: { chat: @chat, user: current_user.id } %>
 <%= turbo_stream.update Chat.new, "" %>

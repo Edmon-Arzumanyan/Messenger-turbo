@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ChatsController < ApplicationController
-  include ActionView::RecordIdentifier
-
   before_action :authenticate_user!
   before_action :set_chat, only: %i[show edit update destroy]
 
@@ -30,10 +28,10 @@ class ChatsController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update(
-            "#{current_user.id}_#{dom_id(@chat)}",
-            target: "#{current_user.id}_#{dom_id(@chat)}",
+            @chat,
+            target: @chat,
             partial: 'chats/chat',
-            locals: { chat: @chat, user: current_user.id }
+            locals: { chat: @chat, user: current_user }
           ),
           turbo_stream.update(
             "#{current_user.id}_show",
@@ -50,7 +48,7 @@ class ChatsController < ApplicationController
 
     if @chat.save
       respond_to do |format|
-        format.html { redirect_to chat_url(@chat), notice: 'Chat was successfully created.' }
+        format.html { redirect_to chats_path, notice: 'Chat was successfully created.' }
         format.turbo_stream { flash.now[:notice] = 'Chat was successfully created.' }
       end
     else
@@ -61,11 +59,11 @@ class ChatsController < ApplicationController
   def update
     if @chat.update(chat_params)
       respond_to do |format|
-        format.html { redirect_to chat_path, notice: 'chat was successfully updated.' }
+        format.html { redirect_to chats_path, notice: 'chat was successfully updated.' }
         format.turbo_stream { flash.now[:notice] = 'chat was successfully updated.' }
       end
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
@@ -91,7 +89,9 @@ class ChatsController < ApplicationController
 
   def set_chat
     @chat = current_user.chats.find_by_id(params[:id])
-    render :index, status: :not_found unless @chat
+    return if @chat
+
+    redirect_to chats_path
   end
 
   def chat_params

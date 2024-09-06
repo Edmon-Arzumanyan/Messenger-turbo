@@ -1,5 +1,4 @@
 <%= turbo_frame_tag "message_form" do %>
-
   <%= form_with(model: [chat, message], local: true) do |f| %>
     <% if message.persisted? || message.parent_id.present? %>
       <% action = message.persisted? ? 'Editing' : 'Replying' %>
@@ -7,27 +6,63 @@
                   class: "text-blue-500 hover:text-blue-700 underline font-medium text-sm mb-4 block" %>
     <% end %>
 
-    <%= f.hidden_field :parent_id, value: message.parent_id %>
+    <div id="attachedFiles" class="flex gap-2"></div>
 
-    <div class="flex flex-col space-y-4">
-      <!-- File Upload Field -->
-      <div class="flex justify-between items-center">
-        <div class="relative">
-          <%= f.file_field :files, multiple: true, id: 'files',
-                           class: "shadow-sm border border-gray-300 rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer" %>
-        </div>
+    <div class="flex space-y-4">
+      <%= f.hidden_field :parent_id, value: message.parent_id %>
+      <label for="files">
+        <span class="material-symbols-outlined" style="font-size: 50px;" title="Attach file">
+          attach_file
+        </span>
+      </label>
+        <%= f.file_field :files, multiple: true, id: 'files', hidden: true,
+                          onchange: 'getFiles(event)' %>
 
-        <!-- Submit Button -->
-        <%= f.submit 'Send',
-              class: "bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" %>
-      </div>
-
-      <!-- Message Text Area -->
-      <div class="relative">
         <%= f.text_area :body, id: 'message',
                         placeholder: "Write your message...",
-                        class: "shadow-sm border border-gray-300 rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none placeholder-gray-400" %>
-      </div>
+                        class: "shadow-sm  rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none placeholder-gray-400 mr-2" %>
+
+        <%= f.submit 'send',
+              class: "material-symbols-outlined bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" %>
     </div>
   <% end %>
+
+<script>
+  function getFiles(e) {
+    var attachedFiles = document.getElementById('attachedFiles');
+    attachedFiles.innerHTML = '';
+
+    var files = e.target.files;
+
+    Array.from(files).forEach((file) => {
+      var fileNameElement = document.createElement('div');
+      var fileType = file.type;
+
+
+      if (fileType.startsWith('image/')) {
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.maxWidth = '100px';
+        img.style.marginRight = '10px';
+        attachedFiles.appendChild(img);
+      }
+
+      // Check if the file is a video
+      else if (fileType.startsWith('video/')) {
+        var video = document.createElement('video');
+        video.src = URL.createObjectURL(file);
+        video.style.maxWidth = '150px';
+        video.controls = true;
+        attachedFiles.appendChild(video);
+      }
+
+
+      if (!fileType.startsWith('image/') && !fileType.startsWith('video/')) {
+        fileNameElement.textContent = file.name;
+      }
+      attachedFiles.appendChild(fileNameElement);
+    });
+  }
+</script>
+
 <% end %>

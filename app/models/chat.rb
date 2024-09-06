@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Chat < ApplicationRecord
-  include ActionView::RecordIdentifier
-
   belongs_to :user_1, class_name: 'User', foreign_key: 'user_1_id'
   belongs_to :user_2, class_name: 'User', foreign_key: 'user_2_id'
   has_many :messages, dependent: :destroy
@@ -30,23 +28,25 @@ class Chat < ApplicationRecord
   private
 
   def broadcast_chat_prepend
-    [user_1, user_2].each do |chat_user|
-      broadcast_prepend_to [chat_user, 'chats'], partial: 'chats/chat', locals: { chat: self, user: chat_user.id }
+    [user_1, user_2].each_with_index do |chat_user, index|
+      next if index == 1 && user_1 == user_2
+
+      broadcast_prepend_to [chat_user, 'chats'], partial: 'chats/chat', locals: { chat: self, user: chat_user }
     end
   end
 
+
   def broadcast_chat_remove
     [user_1, user_2].each do |chat_user|
-      frame_id = "#{chat_user.id}_#{dom_id(self)}"
-      broadcast_remove_to [chat_user, 'chats'], target: frame_id
-      broadcast_remove_to self, target: self
+      broadcast_remove_to [chat_user, 'chats'], target: self
+      broadcast_remove_to [chat_user, self], target: self
     end
   end
 
   def broadcast_chat_replace
     [user_1, user_2].each do |chat_user|
-      broadcast_replace_to "#{chat_user.id}_#{dom_id(chat)}", partial: 'chats/chat',
-                                                              locals: { chat: self, user: chat_user.id }
+      broadcast_replace_to [chat_user, self], partial: 'chats/chat',
+                                                              locals: { chat: self, user: chat_user }
     end
   end
 end

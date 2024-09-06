@@ -1,9 +1,10 @@
-<%= turbo_stream_from "#{user}_#{dom_id(chat)}" %>
-<%= turbo_frame_tag "#{user}_#{dom_id(chat)}" do %>
+<%= turbo_stream_from [user, chat] %>
+
+<%= turbo_frame_tag chat do %>
   <div class="flex justify-between items-center w-full bg-gray-300 text-black border-b border-b-gray-500 p-2 shadow-sm">
     <!-- Chat Title -->
     <div class="font-semibold">
-      <%= link_to chat.title(user), chat_path(chat), class: "hover:underline", data: { turbo_stream: true } %>
+      <%= link_to chat.title(user.id), chat_path(chat), class: "hover:underline", data: { turbo_stream: true } %>
     </div>
 
     <!-- Unread Messages Count -->
