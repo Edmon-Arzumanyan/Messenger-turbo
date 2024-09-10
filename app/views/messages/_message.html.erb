@@ -24,7 +24,7 @@
             <% when /^image/ %>
               <div class="rounded-lg overflow-hidden shadow-lg">
                 <%= link_to rails_blob_path(attachment), target: "_blank" do %>
-                  <%= image_tag attachment, class: "w-full h-auto" %>
+                  <%= image_tag attachment, class: "h[300px] w-[300px]" %>
                 <% end %>
               </div>
             <% when /^audio/ %>
@@ -57,7 +57,7 @@
         <div class="flex items-center space-x-3 text-xs text-gray-400 mt-2">
           <%= 'Edited' if message.is_edited? %> <span class="ml-2 font-medium"><%= message.created_at.strftime('%H:%M') %></span>
 
-          <% if message.user == user && message.chat.title(user.id) != user.email %>
+          <% if message.user == user && message.chat.chat_partner(user.id) != user %>
             <span class="material-symbols-outlined <%= message.status == 'read' ? 'text-green-500' : 'text-gray-400' %>">
               <%= message.status == 'read' ? 'done_all' : 'check' %>
             </span>
@@ -81,11 +81,9 @@
   </div>
 
  <script type='text/javascript'>
-  setTimeout(function() {
     div.scrollTo(0, div.scrollHeight);
     message.value = '';
     files.value = '';
-    }, 500);
   </script>
 <% end %>
 

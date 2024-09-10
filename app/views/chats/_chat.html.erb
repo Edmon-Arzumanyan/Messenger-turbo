@@ -1,12 +1,15 @@
+<% partner = chat.chat_partner(user.id) %>
 <%= turbo_stream_from [user, chat] %>
+<%= turbo_stream_from partner %>
 
 <%= turbo_frame_tag chat do %>
   <div class="flex justify-between items-center w-full bg-gray-300 text-black border-b border-b-gray-500 p-2 shadow-sm">
-    <!-- Chat Title -->
+    <div class="flex items-center gap-2">
+      <%= render partial: "chats/partner_icon", locals: { partner: partner } %>
     <div class="font-semibold">
-      <%= link_to chat.title(user.id), chat_path(chat), class: "hover:underline", data: { turbo_stream: true } %>
+      <%= link_to partner.email, chat_path(chat), class: "hover:underline", data: { turbo_stream: true } %>
     </div>
-
+  </div>
     <!-- Unread Messages Count -->
     <% if chat.unread_messages_count(user) > 0 %>
     <div class="flex items-center bg-white text-blue-500 rounded-full px-3 py-1 text-sm font-medium">

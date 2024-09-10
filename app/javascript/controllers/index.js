@@ -4,8 +4,17 @@
 
 import { application } from "./application"
 
+import FilePreviewController from "./file_preview_controller"
+application.register("file-preview", FilePreviewController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
-import MessageController from "./message_controller"
-application.register("message", MessageController)
+import MessageController from "./message_form_controller"
+application.register("message-form", MessageController)
+
+import OnlineIconController from "./online_icon_controller"
+application.register("online-icon", OnlineIconController)
+
+import OnlineStatusController from "./online_status_controller"
+application.register("online-status", OnlineStatusController)

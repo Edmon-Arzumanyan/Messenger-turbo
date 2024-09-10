@@ -1,0 +1,13 @@
+<%= turbo_frame_tag partner do %>
+  <span data-controller="online-status"
+        data-online-status-last-seen-at-value="<%= partner.last_seen_at.try(:iso8601) %>"
+        data-online-status-target="status">
+    <% if partner.last_seen_at.nil? %>
+      offline
+    <% elsif partner.last_seen_at > 5.minutes.ago  %>
+      <%= time_ago_in_words(partner.last_seen_at) %> ago
+    <% else %>
+      offline
+    <% end %>
+  </span>
+<% end %>

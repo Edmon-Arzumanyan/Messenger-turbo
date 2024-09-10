@@ -8,6 +8,7 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
@@ -15,5 +16,7 @@
     <main class="h-screen w-screen">
       <%= yield %>
     </main>
+
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
   </body>
 </html>

@@ -9,17 +9,18 @@ class Chat < ApplicationRecord
 
   after_create_commit :broadcast_chat_prepend
   after_destroy_commit :broadcast_chat_remove
-  after_update_commit :broadcast_chat_replace
+  after_update_commit :broadcast_chat_update
 
-  def title(current_user_id)
+  def chat_partner(current_user_id)
     if user_1_id == current_user_id
-      user_2.email
+      user_2
     elsif user_2_id == current_user_id
-      user_1.email
+      user_1
     else
-      ''
+      nil
     end
   end
+
 
   def unread_messages_count(user_id)
     messages.unread.where.not(user_id:).count
@@ -43,9 +44,9 @@ class Chat < ApplicationRecord
     end
   end
 
-  def broadcast_chat_replace
+  def broadcast_chat_update
     [user_1, user_2].each do |chat_user|
-      broadcast_replace_to [chat_user, self], partial: 'chats/chat',
+      broadcast_update_to [chat_user, self], partial: 'chats/chat',
                                                               locals: { chat: self, user: chat_user }
     end
   end
