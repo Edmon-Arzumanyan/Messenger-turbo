@@ -49,13 +49,14 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-# Flexible authentication solution for Rails with Warden
-gem 'devise'
-
+# Pretty print Ruby objects with style
 gem 'awesome_print'
 
 # Ancestry is a gem that allows rails ActiveRecord models to be organized as a tree structure (or hierarchy).
 gem 'ancestry'
+
+# Flexible authentication solution for Rails with Warden
+gem 'devise'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -63,9 +64,30 @@ group :development, :test do
 
   # A Ruby gem to load environment variables from .env
   gem 'dotenv-rails'
+
+  # Factory Bot for Rails
+  gem 'factory_bot_rails'
+
+  # A library for generating fake data
+  gem 'faker'
+
+  # RSpec for Rails 6+
+  gem 'rspec-rails'
 end
 
 group :development do
+  # Annotate Rails classes with schema and routes info
+  gem 'annotate'
+
+  # Better error page for Rack apps
+  gem 'better_errors'
+
+  # Retrieve the binding of a method's caller
+  gem 'binding_of_caller'
+
+  # Kill N+1 queries and unused eager loading
+  gem 'bullet'
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 

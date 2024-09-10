@@ -1,9 +1,24 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+ap users = FactoryBot.create_list(:user, 20)
+
+users.each do |user|
+  chats = []
+
+  5.times do
+      excluded_user_ids = user.chats.pluck(:user_2_id).uniq
+      user_2_candidates = User.where.not(id: [user.id, *excluded_user_ids])
+
+      if user_2_candidates.empty?
+        next
+      end
+
+    user_2 = user_2_candidates.sample
+    ap chat = FactoryBot.create(:chat, user_1: user, user_2: user_2)
+
+    chats << chat
+
+    5.times do
+     ap  FactoryBot.create(:message, chat: chat, user: chat.user_1)
+     ap FactoryBot.create(:message, chat: chat, user: chat.user_2)
+    end
+  end
+end

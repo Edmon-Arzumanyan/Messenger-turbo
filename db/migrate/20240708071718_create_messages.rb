@@ -5,6 +5,7 @@ class CreateMessages < ActiveRecord::Migration[7.1]
       t.references :chat, null: false, foreign_key: true
       t.text :body, null: false
       t.integer :status, default: 0
+      t.boolean :is_edited, default: false, null: false
 
       t.timestamps
     end
