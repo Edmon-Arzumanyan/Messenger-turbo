@@ -1,0 +1,5 @@
+<%= turbo_frame_tag "chats" do %>
+  <% chats.each do |chat| %>
+    <%= render partial: "chats/chat", locals: { chat: chat, user: user } %>
+  <% end %>
+<% end %>

@@ -1,3 +1,9 @@
 <%= turbo_frame_tag "#{current_user.id}_show" do %>
-  <%= render 'show' %>
+  <%= render partial: "chats/show",
+             locals: {
+               user: current_user,
+               messages: @messages,
+               message: @message,
+               chat: @chat,
+             } %>
 <% end %>

@@ -1,7 +1,11 @@
 <%= form_for chat, html: { class: "space-y-4 bg-white text-black p-2 shadow-md" } do |f| %>
-  <!-- Error Messages -->
   <% if chat.errors.any? %>
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+    <div
+      class="
+        bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative
+      "
+      role="alert"
+    >
       <strong class="font-bold">There were some errors:</strong>
       <ul class="list-disc ml-5 mt-2">
         <% chat.errors.full_messages.each do |message| %>
@@ -11,15 +15,19 @@
     </div>
   <% end %>
 
-  <!-- User Selection -->
   <div>
-    <%= f.label :user_2_id, 'Select User', class: "block text-gray-700 font-medium mb-2" %>
-    <%= f.select :user_2_id, User.all.pluck(:email, :id), { include_blank: 'Select a user' }, class: "block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" %>
+    <%= f.label :user_2_id, "Select User", class: "block text-gray-700 font-medium mb-2" %>
+    <%= f.select :user_2_id,
+                 User.all.pluck(:email, :id),
+                 { include_blank: "Select a user" },
+                 class: "block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" %>
   </div>
 
-  <!-- Action Buttons -->
   <div class="flex">
-    <%= link_to "Cancel", chats_path, class: "bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 mr-2" %>
-    <%= f.submit 'Create Chat', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" %>
+    <%= link_to "Cancel",
+                chats_path,
+                class: "bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 mr-2" %>
+    <%= f.submit "Create Chat",
+                 class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400" %>
   </div>
 <% end %>

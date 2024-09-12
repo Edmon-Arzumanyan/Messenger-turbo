@@ -1,13 +1,12 @@
 <main class="container mx-auto p-6 bg-gray-100 min-h-screen">
-  <!-- Back to Chats Link -->
-  <%= link_to sanitize("&larr; Back to chats"), chats_path, class: "text-blue-500 hover:underline mb-4 block" %>
+  <%= link_to sanitize("&larr; Back to chats"),
+              chats_path,
+              class: "text-blue-500 hover:underline mb-4 block" %>
 
-  <!-- Header -->
   <div class="bg-white p-4 rounded-lg shadow-md mb-6">
     <h1 class="text-2xl font-semibold text-gray-800">New Chat</h1>
   </div>
 
-  <!-- Chat Form -->
   <%= turbo_frame_tag @chat do %>
     <%= render "form", chat: @chat %>
   <% end %>

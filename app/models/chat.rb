@@ -5,7 +5,7 @@ class Chat < ApplicationRecord
   belongs_to :user_2, class_name: 'User', foreign_key: 'user_2_id'
   has_many :messages, dependent: :destroy
 
-  validates :user_1_id, uniqueness: { scope: :user_2_id }
+  validate :unique_user_pair
 
   after_create_commit :broadcast_chat_prepend
   after_destroy_commit :broadcast_chat_remove
@@ -21,7 +21,6 @@ class Chat < ApplicationRecord
     end
   end
 
-
   def unread_messages_count(user_id)
     messages.unread.where.not(user_id:).count
   end
@@ -36,7 +35,6 @@ class Chat < ApplicationRecord
     end
   end
 
-
   def broadcast_chat_remove
     [user_1, user_2].each do |chat_user|
       broadcast_remove_to [chat_user, 'chats'], target: self
@@ -47,7 +45,14 @@ class Chat < ApplicationRecord
   def broadcast_chat_update
     [user_1, user_2].each do |chat_user|
       broadcast_update_to [chat_user, self], partial: 'chats/chat',
-                                                              locals: { chat: self, user: chat_user }
+                                             locals: { chat: self, user: chat_user }
+    end
+  end
+
+  def unique_user_pair
+    if self.class.where('user_1_id = ? AND user_2_id = ?', user_1_id, user_2_id).exists? ||
+       self.class.where('user_1_id = ? AND user_2_id = ?', user_2_id, user_1_id).exists?
+      errors.add(:base, 'The combination of user_1_id and user_2_id must be unique.')
     end
   end
 end

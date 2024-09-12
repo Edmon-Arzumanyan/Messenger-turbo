@@ -1,0 +1,22 @@
+<%= turbo_frame_tag "users" do %>
+  <% users.each do |user| %>
+    <%= turbo_frame_tag user do %>
+      <div
+        class="
+          flex justify-between items-center w-full bg-gray-300 text-black border-b
+          border-b-gray-500 p-2 shadow-sm
+        "
+      >
+        <div class="flex items-center gap-2">
+          <%= render partial: "chats/partner_icon", locals: { partner: user } %>
+          <div class="font-semibold">
+            <%= form_for Chat.new do |f| %>
+              <%= f.hidden_field :user_2_id, value: user.id %>
+              <%= f.submit user.email, class: "hover:underline cursor-pointer" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

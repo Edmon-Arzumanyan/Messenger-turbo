@@ -5,7 +5,38 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: %i[show edit update destroy]
 
   def index
-    @chats = current_user.chats
+    @chats = current_user.chats.order(updated_at: :desc)
+    @users = User.none
+
+    if params[:query].present?
+      @users = User.search(params[:query])
+      user_ids = @users.pluck(:id)
+
+      initiated_chats = current_user.initiated_chats.where(user_2_id: user_ids)
+      received_chats = current_user.received_chats.where(user_1_id: user_ids)
+      @chats = (initiated_chats + received_chats).uniq
+
+      chat_user_ids = @chats.pluck(:user_1_id, :user_2_id).flatten.uniq
+      @users = @users.where.not(id: chat_user_ids)
+    end
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update(
+            'chats',
+            partial: 'chats/chats_list',
+            locals: { chats: @chats, user: current_user }
+          ),
+          turbo_stream.update(
+            'users',
+            partial: 'chats/users_list',
+            locals: { users: @users }
+          )
+        ]
+      end
+    end
   end
 
   def new
@@ -24,7 +55,7 @@ class ChatsController < ApplicationController
       format.html do
         render :show
       end
-      
+
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.update(
@@ -36,7 +67,10 @@ class ChatsController < ApplicationController
           turbo_stream.update(
             "#{current_user.id}_show",
             partial: 'chats/show',
-            locals: { chat: @chat, user: current_user }
+            locals: { user: current_user,
+                      messages: @messages,
+                      message: @message,
+                      chat: @chat }
           )
         ]
       end
@@ -49,7 +83,7 @@ class ChatsController < ApplicationController
     if @chat.save
       respond_to do |format|
         format.html { redirect_to chats_path, notice: 'Chat was successfully created.' }
-        format.turbo_stream { flash.now[:notice] = 'Chat was successfully created.' }
+        format.turbo_stream
       end
     else
       render :new
@@ -71,13 +105,11 @@ class ChatsController < ApplicationController
 
   def destroy
     if @chat.destroy
-
       respond_to do |format|
         format.html { redirect_to chat_path, notice: 'chat was successfully destroyed.' }
         format.turbo_stream { flash.now[:notice] = 'chat was successfully destroyed.' }
       end
     else
-
       respond_to do |format|
         format.html { redirect_to chat_path, notice: 'chat was successfully destroyed.' }
         format.turbo_stream { flash.now[:notice] = 'chat was successfully destroyed.' }

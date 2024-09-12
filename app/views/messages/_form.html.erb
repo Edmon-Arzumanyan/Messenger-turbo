@@ -1,35 +1,48 @@
 <%= turbo_frame_tag "message_form" do %>
-  <%= form_with(model: [chat, message], local: true, data: { controller: 'file-preview'}) do |f| %>
+  <%= form_with(model: [chat, message], local: true, data: { controller: "file-preview" }) do |f| %>
     <% if message.persisted? || message.parent_id.present? %>
-      <% action = message.persisted? ? 'Editing' : 'Replying' %>
-      <%= link_to "Cancel #{action}", new_chat_message_path(chat), data: { turbo_stream: true },
+      <% action = message.persisted? ? "Editing" : "Replying" %>
+      <%= link_to "Cancel #{action}",
+                  new_chat_message_path(chat),
+                  data: {
+                    turbo_stream: true,
+                  },
                   class: "text-blue-500 hover:text-blue-700 underline font-medium text-sm mb-4 block" %>
     <% end %>
 
-    <div id="attachedFiles" data-file-preview-target="attachedFiles" class="flex  items-end gap-2"></div>
+    <div
+      id="attachedFiles"
+      data-file-preview-target="attachedFiles"
+      class="flex items-end gap-2"
+    ></div>
     <div class="flex space-y-4">
-      <!-- Moved attachedFiles inside the controller's scope -->
-
       <%= f.hidden_field :parent_id, value: message.parent_id %>
 
       <label for="files">
-        <span class="material-symbols-outlined cursor-pointer hover:bg-gray-200" style="font-size: 50px;" title="Attach file">
+        <span
+          class="material-symbols-outlined cursor-pointer hover:bg-gray-200"
+          style="font-size: 50px;"
+          title="Attach file"
+        >
           attach_file
         </span>
       </label>
 
       <%= f.file_field :files,
                        multiple: true,
-                       id: 'files',
+                       id: "files",
                        hidden: true,
-                       data: { action: "change->file-preview#previewFiles" } %>
+                       data: {
+                         action: "change->file-preview#previewFiles",
+                       } %>
 
-      <%= f.text_area :body, id: 'message',
+      <%= f.text_area :body,
+                      id: "message",
                       placeholder: "Write your message...",
                       class: "shadow-sm rounded-lg w-full px-4 py-2 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none placeholder-gray-400 mr-2" %>
 
-      <%= f.submit 'send',
-            class: "cursor-pointer material-symbols-outlined bg-blue-500 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" %>
+      <%= f.submit "send",
+                   class: "cursor-pointer material-symbols-outlined bg-blue-500 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-150 ease-in-out" %>
     </div>
   <% end %>
 <% end %>

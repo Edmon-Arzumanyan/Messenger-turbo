@@ -1,0 +1,19 @@
+<%= form_with url: chats_path,
+             method: :get,
+             data: {
+               controller: "search",
+               search_target: "form",
+               turbo_stream: true,
+             },
+             class: "space-y-4 mb-4 shadow-md" do |form| %>
+
+  <div>
+    <%= text_field_tag :query,
+                       params[:query],
+                       data: {
+                         action: "keyup->search#submit",
+                       },
+                       placeholder: "Search",
+                       class: "w-full px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" %>
+  </div>
+<% end %>

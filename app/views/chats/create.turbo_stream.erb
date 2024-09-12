@@ -1,1 +1,10 @@
 <%= turbo_stream.update Chat.new, "" %>
+<%= turbo_stream.remove @chat.user_2 %>
+<%= turbo_stream.update "#{current_user.id}_show",
+                        partial: "chats/show",
+                        locals: {
+                          user: current_user,
+                          messages: @chat.messages,
+                          message: Message.new,
+                          chat: @chat,
+                        } %>

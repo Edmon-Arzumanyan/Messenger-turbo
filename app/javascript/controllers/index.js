@@ -10,11 +10,14 @@ application.register("file-preview", FilePreviewController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
-import MessageController from "./message_form_controller"
-application.register("message-form", MessageController)
+import MessageFormController from "./message_form_controller"
+application.register("message-form", MessageFormController)
 
 import OnlineIconController from "./online_icon_controller"
 application.register("online-icon", OnlineIconController)
 
 import OnlineStatusController from "./online_status_controller"
 application.register("online-status", OnlineStatusController)
+
+import SearchController from "./search_controller"
+application.register("search", SearchController)

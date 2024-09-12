@@ -23,7 +23,7 @@ gem 'jsbundling-rails'
 gem 'turbo-rails'
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+gem 'tailwindcss-rails'
 
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem 'stimulus-rails'
@@ -49,6 +49,10 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+################################################################################
+# Application gems
+################################################################################
+
 # Pretty print Ruby objects with style
 gem 'awesome_print'
 
@@ -57,6 +61,12 @@ gem 'ancestry'
 
 # Flexible authentication solution for Rails with Warden
 gem 'devise'
+
+# Soft deletes for ActiveRecord done right
+gem 'discard'
+
+# Build ActiveRecord named scopes to use PostgreSQL's full-text search
+gem 'pg_search'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -96,4 +106,35 @@ group :development do
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   # gem "spring"
+
+  # Format ERB files with speed and precision
+  gem 'erb-formatter', require: false
+
+  # Lint your ERB or HTML files
+  gem 'erb_lint', require: false
+
+  # Add speed badges
+  # gem 'rack-mini-profiler'
+
+  # Static Ruby code analyzer and formatter, based on the community style guide
+  gem 'rubocop', require: false
+
+  # Code style checking for Capybara files
+  gem 'rubocop-capybara', require: false
+
+  # Code style checking for factory_bot files
+  gem 'rubocop-factory_bot', require: false
+
+  # An extension of RuboCop focused on code performance checks
+  gem 'rubocop-performance', require: false
+
+  # Code style checking for Rails applications
+  gem 'rubocop-rails', require: false
+
+  # Code style checking for RSpec files
+  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec_rails', require: false
+
+  # The Ruby formatter
+  gem 'rufo', require: false
 end
