@@ -9,6 +9,7 @@ class User < ApplicationRecord
          :rememberable,
          :validatable
 
+  has_one_attached :image
   has_many :initiated_chats, class_name: 'Chat', foreign_key: 'user_1_id'
   has_many :received_chats, class_name: 'Chat', foreign_key: 'user_2_id'
   has_many :messages, dependent: :destroy

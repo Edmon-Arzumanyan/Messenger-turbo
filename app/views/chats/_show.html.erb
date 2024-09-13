@@ -6,7 +6,7 @@
     <!-- Chat Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="text-lg font-semibold flex-1 text-center">
-        <%= chat.chat_partner(current_user.id).email %>
+        <%= chat.chat_partner(current_user.id).full_name %>
         <p class="text-sm font-base">
           <%= render partial: "chats/partner", locals: { partner: partner } %>
         </p>

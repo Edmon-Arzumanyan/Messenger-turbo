@@ -13,7 +13,7 @@
       <%= render partial: "chats/partner_icon", locals: { partner: partner } %>
 
       <div class="font-semibold">
-        <%= link_to partner.email,
+        <%= link_to partner.full_name,
                     chat_path(chat),
                     class: "hover:underline",
                     data: {
