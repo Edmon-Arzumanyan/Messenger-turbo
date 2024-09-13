@@ -8,6 +8,6 @@
   </div>
 
   <%= turbo_frame_tag @chat do %>
-    <%= render "form", chat: @chat %>
+    <%= render "form", chat: @chat, users: @users %>
   <% end %>
 </main>

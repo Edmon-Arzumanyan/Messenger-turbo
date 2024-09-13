@@ -10,6 +10,9 @@ users.each do |user|
     next if user_2_candidates.empty?
 
     user_2 = user_2_candidates.sample
+
+    next if Chat.exists?(user_1: user, user_2:) || Chat.exists?(user_1: user_2, user_2: user)
+
     ap chat = FactoryBot.create(:chat, user_1: user, user_2:)
 
     chats << chat

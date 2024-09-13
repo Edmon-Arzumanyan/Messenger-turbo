@@ -7,13 +7,24 @@
              },
              class: "space-y-4 mb-4 shadow-md" do |form| %>
 
-  <div>
+  <div class="flex items-center relative">
     <%= text_field_tag :query,
                        params[:query],
                        data: {
                          action: "keyup->search#submit",
+                         search_target: "query",
                        },
                        placeholder: "Search",
                        class: "w-full px-3 py-2 border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700" %>
+
+    <span
+      data-action="click->search#clear"
+      class="
+        material-symbols-outlined cursor-pointer absolute right-3 text-gray-500
+        hover:text-gray-700
+      "
+    >
+      close
+    </span>
   </div>
 <% end %>

@@ -7,6 +7,7 @@ class CreateMessages < ActiveRecord::Migration[7.1]
       t.integer :status, default: 0
       t.boolean :is_edited, default: false, null: false
 
+      t.datetime :discarded_at, index: true
       t.timestamps
     end
   end

@@ -39,7 +39,7 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    if @message.destroy
+    if @message.discard
       respond_to do |format|
         format.html { redirect_to chats_path, notice: 'Message was successfully destroyed.' }
         format.turbo_stream { replace_form_with_new_message }
@@ -61,9 +61,9 @@ class MessagesController < ApplicationController
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace(
-            "message_form",
+            'message_form',
             partial: 'messages/form',
-            locals: { chat: @chat, message: message }
+            locals: { chat: @chat, message: }
           )
         ]
       end
@@ -73,7 +73,7 @@ class MessagesController < ApplicationController
   def replace_form_with_new_message
     render turbo_stream: [
       turbo_stream.replace(
-        "message_form",
+        'message_form',
         partial: 'messages/form',
         locals: { chat: @chat, message: Message.new }
       )

@@ -45,8 +45,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_05_103909) do
   create_table "chats", force: :cascade do |t|
     t.bigint "user_1_id", null: false
     t.bigint "user_2_id", null: false
+    t.datetime "discarded_at"
+    t.datetime "last_discared_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["discarded_at"], name: "index_chats_on_discarded_at"
+    t.index ["last_discared_at"], name: "index_chats_on_last_discared_at"
     t.index ["user_1_id"], name: "index_chats_on_user_1_id"
     t.index ["user_2_id"], name: "index_chats_on_user_2_id"
   end
@@ -57,11 +61,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_05_103909) do
     t.text "body", null: false
     t.integer "status", default: 0
     t.boolean "is_edited", default: false, null: false
+    t.datetime "discarded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "ancestry"
     t.index ["ancestry"], name: "index_messages_on_ancestry"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["discarded_at"], name: "index_messages_on_discarded_at"
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
@@ -77,6 +83,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_05_103909) do
     t.string "last_name"
     t.string "phone"
     t.datetime "last_seen_at"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

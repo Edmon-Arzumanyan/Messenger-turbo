@@ -6,5 +6,7 @@ class AddFieldsToUsers < ActiveRecord::Migration[7.1]
     add_column :users, :last_name, :string
     add_column :users, :phone, :string
     add_column :users, :last_seen_at, :datetime
+    add_column :users, :discarded_at, :datetime
+    add_index :users, :discarded_at
   end
 end

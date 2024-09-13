@@ -1,4 +1,4 @@
-<%= form_for chat, html: { class: "space-y-4 bg-white text-black p-2 shadow-md" } do |f| %>
+<%= form_for chat, html: { class: "space-y-4 bg-white text-black p-2 shadow-md mb-4" } do |f| %>
   <% if chat.errors.any? %>
     <div
       class="
@@ -18,7 +18,7 @@
   <div>
     <%= f.label :user_2_id, "Select User", class: "block text-gray-700 font-medium mb-2" %>
     <%= f.select :user_2_id,
-                 User.all.pluck(:email, :id),
+                 users.pluck(:email, :id),
                  { include_blank: "Select a user" },
                  class: "block w-full border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50" %>
   </div>
