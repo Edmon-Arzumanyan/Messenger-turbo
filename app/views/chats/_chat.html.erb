@@ -1,8 +1,9 @@
-<% partner = chat.chat_partner(user.id) %>
 <%= turbo_stream_from [user, chat] %>
-<%= turbo_stream_from partner %>
 
 <%= turbo_frame_tag chat do %>
+  <% partner = chat.chat_partner(user.id) %>
+  <%= turbo_stream_from partner %>
+
   <div
     class="
       flex justify-between items-center w-full bg-gray-300 text-black border-b

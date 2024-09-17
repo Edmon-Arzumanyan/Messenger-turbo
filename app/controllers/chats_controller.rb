@@ -46,7 +46,14 @@ class ChatsController < ApplicationController
   end
 
   def show
-    @chat.undiscard if @chat.discarded?
+    discarded = true if @chat.discarded?
+
+    if discarded
+      partner = @chat.chat_partner(current_user.id)
+      @chat.undiscard
+      @chat.broadcast_chat_undiscard(partner) if partner
+    end
+
     @message = current_user.messages.new
 
     @messages = if @chat.last_discared_at.present?
@@ -60,9 +67,7 @@ class ChatsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html do
-        render :show
-      end
+      format.html { render :show }
 
       format.turbo_stream do
         render turbo_stream: [
@@ -75,10 +80,7 @@ class ChatsController < ApplicationController
           turbo_stream.update(
             "#{current_user.id}_show",
             partial: 'chats/show',
-            locals: { user: current_user,
-                      messages: @messages,
-                      message: @message,
-                      chat: @chat }
+            locals: { user: current_user, messages: @messages, message: @message, chat: @chat }
           )
         ]
       end

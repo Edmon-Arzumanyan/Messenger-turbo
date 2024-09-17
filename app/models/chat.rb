@@ -9,7 +9,6 @@ class Chat < ApplicationRecord
 
   after_create_commit :broadcast_chat_prepend
   after_discard :update_last_discarded_at
-
   # after_destroy_commit :broadcast_chat_remove
 
   def chat_partner(current_user_id)
@@ -30,12 +29,14 @@ class Chat < ApplicationRecord
     end
   end
 
+  def broadcast_chat_undiscard(partner)
+    broadcast_prepend_to [partner, 'chats'], partial: 'chats/chat', locals: { chat: self, user: partner }
+  end
+
   private
 
   def broadcast_chat_prepend
-    [user_1, user_2].each_with_index do |chat_user, index|
-      next if index == 1 && user_1 == user_2
-
+    [user_1, user_2].uniq.each do |chat_user|
       broadcast_prepend_to [chat_user, 'chats'], partial: 'chats/chat', locals: { chat: self, user: chat_user }
     end
   end
