@@ -88,7 +88,7 @@ class MessagesController < ApplicationController
 
   def set_message
     @message = @chat.messages.find_by_id(params[:id])
-    return if @message
+    return authorize @message if @message
 
     redirect_to chats_path
   end

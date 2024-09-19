@@ -74,9 +74,6 @@ gem 'pg_search'
 # Track changes to your Rails models
 gem 'paper_trail'
 
-# Build ActiveRecord named scopes to use PostgreSQL's full-text search
-gem 'pg_search'
-
 # Minimal authorization through OO design and pure Ruby classes
 gem 'pundit'
 

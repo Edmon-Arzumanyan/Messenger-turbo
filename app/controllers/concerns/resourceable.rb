@@ -3,6 +3,7 @@ module Resourceable
 
   included do
     before_action :set_resource, except: %i[index new create]
+    before_action :authorize_access
 
     helper_method :path_index,
                   :path_show,
@@ -289,7 +290,19 @@ module Resourceable
     end
   end
 
+  def authorize_by_model_actions
+    %w[index new create]
+  end
+
   private
+
+  def authorize_access
+    if authorize_by_model_actions.include?(action_name)
+      authorize :"Admin::#{resource_class}"
+    else
+      authorize @resource, policy_class: :"Admin::#{resource_class}"
+    end
+  end
 
   def resource_params
     raise NotImplementedError
