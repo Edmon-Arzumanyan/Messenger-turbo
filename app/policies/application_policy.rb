@@ -13,27 +13,31 @@ class ApplicationPolicy
   end
 
   def show?
-    user&.admin?
+    index?
   end
 
   def create?
-    user&.admin?
+    index?
   end
 
   def new?
-    create?
+    index?
   end
 
   def update?
-    user&.admin?
+    index?
   end
 
   def edit?
-    update?
+    index?
   end
 
   def destroy?
-    user&.admin?
+    index?
+  end
+
+  def toggle_activation?
+    index?
   end
 
   class Scope

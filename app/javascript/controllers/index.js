@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import AlertController from "./alert_controller"
+application.register("alert", AlertController)
+
 import FilePreviewController from "./file_preview_controller"
 application.register("file-preview", FilePreviewController)
 

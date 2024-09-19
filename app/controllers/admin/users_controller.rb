@@ -40,7 +40,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def path_new
-    raise NotImplementedError
+    new_admin_user_path
   end
 
   def path_create
@@ -48,7 +48,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def path_edit
-    admin_edit_user_path(resource)
+    edit_admin_user_path(resource)
   end
 
   def path_update

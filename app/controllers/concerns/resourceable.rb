@@ -57,7 +57,11 @@ module Resourceable
 
         format.json { render :show, status: :created, location: @resource }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do
+          flash[:alert] = @resource.errors.full_messages.join(',')
+          redirect_to path_new
+        end
+
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -78,7 +82,10 @@ module Resourceable
 
         format.json { render :show, status: :ok, location: @resource }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html do
+          flash[:alert] = @resource.errors.full_messages.join(',')
+          redirect_to path_edit
+        end
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end

@@ -34,7 +34,7 @@ class Admin::MessagesController < ApplicationController
   end
 
   def path_new
-    raise NotImplementedError
+    new_admin_message_path
   end
 
   def path_create
@@ -42,7 +42,7 @@ class Admin::MessagesController < ApplicationController
   end
 
   def path_edit
-    admin_edit_message_path(resource)
+    edit_admin_message_path(resource)
   end
 
   def path_update

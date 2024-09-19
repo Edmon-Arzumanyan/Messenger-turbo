@@ -13,13 +13,28 @@
       <fieldset
         class="my-4 flex flex-wrap p-4 mt-6 border border-gray-400 rounded-md"
       >
-        <legend class="ml-4 font-bold text-md mode-strong"><%= t("files") %></legend>
+        <legend class="ml-4 font-bold text-md mode-strong">Files</legend>
         <% @resource.files.each do |file| %>
           <%= link_to file.filename,
                       url_for(file),
                       class: "ml-2 bg-blue-500 hover:bg-blue-600 border rounded-lg px-6 py-2 text-white whitespace-nowrap" %>
         <% end %>
       </fieldset>
+    <% end %>
+
+    <% if @resource.ancestors.any? %>
+      <div class="my-4">
+        <h2 class="font-bold text-lg mb-2">Message Ancestry</h2>
+        <ul>
+          <% @resource.ancestors.each do |ancestor| %>
+            <li>
+              <%= link_to ancestor.body.truncate(100),
+                          admin_message_path(ancestor),
+                          class: "text-blue-500 hover:text-underline" %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
 
     <%= render "shared/versions" %>

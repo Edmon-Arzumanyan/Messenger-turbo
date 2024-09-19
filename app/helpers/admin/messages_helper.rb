@@ -34,7 +34,15 @@ module Admin::MessagesHelper
       fields: [
         { attribute: :chat_id, type: :select, options: Chat.pluck(:number, :id), required: true },
         { attribute: :user_id, type: :select, options: User.pluck(:email, :id), required: true },
-        { attribute: :parent_id, type: :select, options: [''] + (@resource.chat&.messages&.pluck(:body, :id) || []) },
+        {
+          attribute: :parent_id,
+          type: :select,
+          options: if @resource&.persisted?
+                     [''] + @resource.chat&.messages&.pluck(:body, :id)
+                   else
+                     [''] + Message.all.pluck(:body, :id)
+                   end
+        },
         { attribute: :is_edited, type: :select, options: [true, false] },
         { attribute: :status, type: :select, options: Message.statuses.keys },
         { attribute: :body, type: :text_field }
