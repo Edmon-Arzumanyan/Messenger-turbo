@@ -7,7 +7,7 @@ Define database credentials in `.env`:
 ```shell
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
-DATABASE_NAME=wdpro
+DATABASE_NAME=messanger
 DATABASE_USERNAME=postgres
 DATABASE_PASSWORD=postgres
 ```
