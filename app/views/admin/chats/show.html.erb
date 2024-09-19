@@ -1,0 +1,13 @@
+<%= render partial: "shared/sidebar" %>
+<div class="px-4 sm:ml-80">
+  <%= render partial: "shared/heading", locals: { title: "Chat Details" } %>
+  <div class="p-4 bg-white rounded-sm dark:bg-gray-700">
+    <%= render partial: "shared/form",
+               locals: admin_chats_form_settings.merge(
+                 disabled: true,
+                 show_edit: true,
+                 show_delete: true,
+               ) %>
+    <%= render "shared/versions" %>
+  </div>
+</div>

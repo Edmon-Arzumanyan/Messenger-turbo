@@ -56,8 +56,8 @@ class ChatsController < ApplicationController
 
     @message = current_user.messages.new
 
-    @messages = if @chat.last_discared_at.present?
-                  Message.after_last_discared_at(@chat).order(:created_at)
+    @messages = if @chat.last_discarded_at.present?
+                  Message.after_last_discarded_at(@chat).order(:created_at)
                 else
                   @chat.messages.order(:created_at)
                 end
