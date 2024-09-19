@@ -65,8 +65,23 @@ gem 'devise'
 # Soft deletes for ActiveRecord done right
 gem 'discard'
 
+# Scope & engine based paginator for Ruby apps
+gem 'kaminari'
+
 # Build ActiveRecord named scopes to use PostgreSQL's full-text search
 gem 'pg_search'
+
+# Track changes to your Rails models
+gem 'paper_trail'
+
+# Build ActiveRecord named scopes to use PostgreSQL's full-text search
+gem 'pg_search'
+
+# Minimal authorization through OO design and pure Ruby classes
+gem 'pundit'
+
+# A set of responders modules to dry up your Rails app
+gem 'responders'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
