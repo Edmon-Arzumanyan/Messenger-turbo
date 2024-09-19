@@ -31,4 +31,5 @@ To seed the database with fake data: `rake db:seed`
 
 ## Running
 
-- Start all services: `foreman start -f Procfile.dev`
+- Start all services: `bin/dev`
+- This command will load environment variables from .env and start all services defined in Procfile.dev using foreman.
