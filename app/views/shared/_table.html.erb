@@ -1,0 +1,79 @@
+<div
+  class="
+    dark:bg-gray-700 overflow-auto rounded-sm bg-white px-5 pb-2.5 pt-6 bg-white
+    rounded-sm shadow-md dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1
+  "
+>
+  <table class="w-full text-sm text-left text-gray-500">
+    <thead
+      class="
+        text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-500 mode-strong
+      "
+    >
+      <tr class="grid-cols-8 bg-gray-2 dark:bg-meta-4 dark:border-strokedark">
+        <% head.each do |field| %>
+          <% sort_column = field[:sort_column] || field[:name] %>
+          <% sort_params = sort_params(sort_column) %>
+          <th class="whitespace-nowrap px-3 py-2.5" scope="col">
+            <% if field[:sortable] %>
+              <%= link_to request.query_parameters.merge(sort_params), class: "flex items-center gap-1" do %>
+                <%= resource_class.send(:human_attribute_name, field[:name]) %>
+                <% if params[:sort_by] == sort_column.to_s %>
+                  <% if params[:sort_direction] == "asc" %>
+                    <span class="material-symbols-outlined">
+                      arrow_drop_up
+                    </span>
+                  <% else %>
+                    <span class="material-symbols-outlined">
+                      arrow_drop_down
+                    </span>
+                  <% end %>
+                <% else %>
+                  <span class="material-symbols-outlined">
+                    unfold_more
+                  </span>
+                <% end %>
+              <% end %>
+            <% else %>
+              <%= resource_class.send(:human_attribute_name, field[:name]) %>
+            <% end %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+    <tbody>
+      <% data.each do |item| %>
+        <tr
+          class="
+            grid-cols-8 border-b border-gray-200 group dark:border-gray-500
+            hover:bg-blue-500 hover:text-white dark:text-white dark:hover:bg-yellow-300
+            dark:hover:text-black
+          "
+        >
+          <% body.each_with_index do |config, i| %>
+            <% css_class = "p-2.5 xl:p-5" if i == 0 %>
+            <td class="p-2.5 xl:p-5 <%= css_class %> ">
+              <% if config[:link] %>
+                <% route_params = config[:link][:params].map { |method| item.public_send(method) } %>
+                <%= link_to item.public_send(config[:attribute]),
+                            public_send(config[:link][:route], *route_params),
+                            class: "table-link" %>
+              <% elsif config[:attribute] %>
+                <% if config[:sub_attributes] %>
+                  <% config[:sub_attributes].each do |sub_attr| %>
+                    <%= item.public_send(config[:attribute]).public_send(sub_attr) %>
+                  <% end %>
+                <% else %>
+                  <%= item.public_send(config[:attribute]) %>
+                <% end %>
+              <% elsif config[:call] %>
+                <%= config[:call].call(item) %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= paginate data %>
+</div>

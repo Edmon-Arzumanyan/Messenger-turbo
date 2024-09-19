@@ -1,0 +1,30 @@
+<% flash.each do |type, message| %>
+  <div
+    data-controller="alert"
+    class="<%= "px-4 sm:ml-80" if controller_path =~ %r{^admin/} %>"
+  >
+    <div
+      id="alert-1"
+      class="
+        <%= flash_alert_class(type) %> shadow flex items-center justify-between
+        p-2 hover:bg-opacity-90 bg-opacity-80
+      "
+      role="alert"
+    >
+      <span class="items-center">
+        <%= message %>
+      </span>
+      <button
+        type="button"
+        class="
+          ms-auto mr-1 rounded-lg inline-flex shadow bg-gray-50 bg-opacity-20
+          hover:bg-gray-150 hover:bg-opacity-40 items-center h-6.5 w-6.5
+        "
+      >
+        <span class="material-symbols-outlined">
+          close
+        </span>
+      </button>
+    </div>
+  </div>
+<% end %>

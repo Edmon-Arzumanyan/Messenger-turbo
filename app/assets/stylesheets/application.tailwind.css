@@ -11,22 +11,20 @@
     @apply block text-sm font-medium text-gray-700;
   }
 
+  .submit-button,
+  .cancel-button {
+    @apply px-4 py-2 font-semibold rounded-md focus:ring-2 focus:ring-offset-2;
+  }
+
   .submit-button {
-    @apply px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500;
+    @apply bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500;
   }
 
   .cancel-button {
-    @apply px-4 py-2 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-700 focus:ring-2 focus:ring-offset-2 focus:ring-gray-500;
+    @apply bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500;
+  }
+
+  .table-link {
+    @apply text-sky-500 hover:underline group-hover:text-yellow-300 dark:group-hover:text-sky-500;
   }
 }
-
-::-webkit-scrollbar {
-  width: 0px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-scrollbar-width: thin;
-scrollbar-color: #888 #f1f1f1;

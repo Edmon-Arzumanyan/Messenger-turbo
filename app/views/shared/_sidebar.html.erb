@@ -1,0 +1,73 @@
+<!-- https://flowbite.com/docs/components/sidebar/#default-sidebar -->
+<aside
+  id="default-sidebar"
+  class="
+    fixed top-0 left-0 z-40 h-screen transition-transform -translate-x-full w-80
+    sm:translate-x-0 bg-gray-50 bg-white rounded-sm shadow-md
+  "
+  aria-label="Sidebar"
+>
+  <div
+    class="
+      flex flex-col justify-between h-screen px-3 py-4 overflow-y-auto bg-white
+      dark:bg-gray-700
+    "
+  >
+    <div>
+      <%= link_to root_path, class: "flex items-center p-2 w-full font-normal rounded-sm transition duration-75 group text-gray-900 dark:text-white mt-2 hover:bg-gray-300 dark:hover:bg-gray-500" do %>
+        <span class="material-symbols-outlined">home</span>
+        <span class="ml-3"><%= t("home") %></span>
+      <% end %>
+      <% admin_sidebar_links.each_with_index do |main_link, index| %>
+        <% active_page = false %>
+        <% if main_link[:sublinks].present?
+             main_link[:sublinks].each do |link|
+               active_page = true if current_page?(link[:url]) ||
+                                     current_page?(link[:url] + "/edit")
+             end
+           end %>
+        <button
+          type="button"
+          class="
+            flex items-center px-2 w-full text-base font-normal rounded-sm transition
+            duration-75 group mt-2 hover:bg-gray-300 dark:text-white dark:hover:bg-gray-500
+            <%= current_page?(main_link[:url]) || current_page?(main_link[:url] + "/edit") ? "text-gray-900 bg-gray-300 dark:bg-gray-500" : "text-gray-900" %>
+          "
+          aria-controls="dropdown-<%= index %>"
+          data-collapse-toggle="dropdown-<%= index %>"
+        >
+          <%= link_to main_link[:url], class: "flex items-center py-2 w-full text-base font-normal rounded-sm transition duration-75 group #{current_page?(main_link[:url]) ? "text-gray-900 dark:text-white" : "text-gray-900 dark:text-white"}" do %>
+            <span
+              class="
+                flex-shrink-0 w-6 h-6 transition duration-75 material-symbols-outlined
+              "
+            ><%= main_link[:icon] %></span>
+            <span class="flex-1 ml-3 text-left whitespace-nowrap"><%= main_link[:title] %></span>
+          <% end %>
+          <% if main_link[:sublinks].present? %>
+            <span class="text-gray-400 material-symbols-outlined">
+              expand_more
+            </span>
+          <% end %>
+        </button>
+        <ul
+          id="dropdown-<%= index %>"
+          class="px-4 <%= current_page?(main_link[:url]) || active_page ? "block" : "hidden" %>"
+        >
+          <% if main_link[:sublinks].present? %>
+            <% main_link[:sublinks].each do |sublink| %>
+              <li>
+                <%= link_to sublink[:url], class: "flex items-center p-2 w-full font-normal rounded-sm transition duration-75 group dark:text-gray-200 dark:hover:text-white hover:text-gray-500 mt-2 #{current_page?(sublink[:url]) || current_page?(sublink[:url] + "/edit") ? "text-gray-200 bg-gray-400" : "text-gray-500"}" do %>
+                  <span class="material-symbols-outlined">
+                    <%= sublink[:icon] %>
+                  </span>
+                  <span class="flex-1 ml-3 text-sm text-left whitespace-nowrap"><%= sublink[:title] %></span>
+                <% end %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</aside>

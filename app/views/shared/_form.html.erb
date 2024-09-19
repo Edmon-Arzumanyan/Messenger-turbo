@@ -1,0 +1,93 @@
+<!-- https://flowbite.com/docs/components/forms/#floating-labels -->
+<% label_class =
+     "absolute top-3 origin-[0] -translate-y-6 scale-75 transform text-sm text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium mode-strong" %>
+<% input_class =
+     "peer block w-full appearance-none border-0 border-b border-gray-200 dark:border-gray-500 bg-transparent px-0 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-0 mode-strong dark:bg-gray-700" %>
+
+<%= form_for models do |f| %>
+  <div class="mt-4">
+    <%= f.hidden_field :admin, value: true %>
+
+    <% fields.each do |field| %>
+      <% hidden_class = field[:hidden] ? "hidden hidden_class" : "" %>
+      <% required_class = field[:required] ? "required-label" : "" %>
+
+      <% common_options =
+           {
+                   class: "#{hidden_class} #{input_class}",
+                   disabled: local_assigns[:disabled] || nil,
+                   pattern: field[:pattern],
+                   placeholder: "",
+                   required: field[:required] || false,
+                   readonly: field[:readonly] || nil,
+                   step: field[:step],
+                   multiple: field[:multiple] || false,
+                   autocomplete: "off",
+                 }.tap { |opts| opts[:id] = field[:id] if field[:id].present? }.compact %>
+
+      <div class="relative z-0 w-full mb-2">
+        <% if field[:type] == :select %>
+          <%= f.select field[:attribute],
+                       options_for_select(field[:options], f.object.send(field[:attribute])),
+                       { prompt: field[:prompt] },
+                       common_options %>
+        <% else %>
+          <%= f.send(field[:type], field[:attribute], common_options) %>
+        <% end %>
+
+        <% field_label = f.object.class.human_attribute_name(field[:attribute]) %>
+        <% field_label = "#{field_label} #{field[:pattern_label]}" if field[:pattern_label] %>
+        <%= f.label field[:attribute],
+                    t("#{field[:attribute]}"),
+                    class: "#{hidden_class} #{label_class} #{required_class}" %>
+        <% if f.object.errors[field[:attribute]].any? %>
+          <div class="mt-1 text-sm text-red-500">
+            <%= f.object.errors[field[:attribute]].join(", ") %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if (!local_assigns[:disabled]) %>
+    <div class="flex mt-4 gap-x-2">
+      <%= f.submit f.object.new_record? ? "Create" : "Save",
+                   class: "w-full rounded-lg bg-green-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 sm:w-auto" %>
+      <%= link_to "Cancel",
+                  show_path,
+                  class: "w-full rounded-lg bg-gray-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 sm:w-auto dark:bg-white dark:text-gray-700 dark:hover:bg-gray-400 dark:hover:text-white" %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="flex gap-x-2">
+  <% record = models.last %>
+
+  <% if local_assigns[:show_edit] %>
+    <%= link_to "Edit",
+                edit_path,
+                class: "w-full rounded-lg bg-blue-700 mt-4 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-blue-300 sm:w-auto" %>
+  <% end %>
+  <div class="flex mt-4 gap-x-2">
+    <% if local_assigns[:show_delete] %>
+      <%= button_to "Delete",
+                    show_path,
+                    data: {
+                      confirm: "Are you sure?",
+                    },
+                    method: :delete,
+                    class: "w-full rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 sm:w-auto" %>
+
+      <%= button_to (record.kept? ? "Archive" : "Activate"),
+                    url_for(action: :toggle_activation, id: record),
+                    method: :patch,
+                    class: "w-full rounded-lg px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4 sm:w-auto " +
+                           (if record.discarded?
+                             "bg-green-700 hover:bg-green-800 focus:ring-green-300"
+                           else
+                             "bg-gray-700 hover:bg-gray-800 focus:ring-gray-300"
+                           end) %>
+
+    <% end %>
+  </div>
+</div>

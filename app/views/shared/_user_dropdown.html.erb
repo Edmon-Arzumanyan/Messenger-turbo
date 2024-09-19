@@ -3,8 +3,8 @@
     id="dropdownAvatarNameButton"
     data-dropdown-toggle="dropdownAvatarName"
     class="
-      relative mr-2 text-sm font-medium rounded-full max-lg:m-end hover:text-primary
-      text-white dark:text-white transition-colors duration-300
+      relative mr-2 text-sm font-medium rounded-full max-lg:m-end transition-colors
+      duration-300
     "
     type="button"
   >
@@ -31,13 +31,25 @@
       class="text-sm"
       aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton"
     >
+      <% if current_user.admin? %>
+        <li>
+          <%= link_to admin_root_path, class: "block px-4 py-2 w-full flex inline-flex hover:bg-gray-100 dark:hover:bg-gray-500" do %>
+            <span class="material-symbols-outlined">
+              admin_panel_settings
+            </span>
+            <span class="pl-5">
+              Admin Section
+            </span>
+          <% end %>
+        </li>
+      <% end %>
       <li>
         <%= link_to edit_user_registration_path, class: "block px-4 py-2 w-full flex inline-flex hover:bg-gray-100 dark:hover:bg-gray-500" do %>
           <span class="material-symbols-outlined">
             manage_accounts
           </span>
           <span class="pl-5">
-            <%= t("settings") %>
+            Settings
           </span>
         <% end %>
       </li>
@@ -47,7 +59,7 @@
             logout
           </span>
           <span class="pl-5">
-            <%= t("log_out") %>
+            Logout
           </span>
         <% end %>
       </li>

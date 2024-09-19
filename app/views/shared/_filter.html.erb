@@ -1,0 +1,40 @@
+<% input_class =
+    "w-full rounded-sm px-4 py-2 border border-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 focus:outline-none" %>
+
+<%= form_tag(index_path, method: :get) do %>
+  <div class="w-full grid grid-cols-1 md:grid-cols-4 gap-4">
+    <% fields.each do |field| %>
+      <div class="w-full p-2 dark:text-white">
+        <%= label_tag field[:attribute],
+                      field[:attribute].to_s.humanize,
+                      class: "text-sm font-semibold text-gray-500 dark:text-white" %>
+
+        <% if field[:type] == :select %>
+          <%= select_tag field[:attribute],
+                         options_for_select(field[:options], params[field[:attribute]]),
+                         include_blank: field[:prompt],
+                         class: input_class %>
+        <% else %>
+          <%= send(
+                "#{field[:type]}_tag",
+                field[:attribute],
+                params[field[:attribute]],
+                placeholder: field[:placeholder],
+                class: input_class,
+                pattern: field[:pattern],
+              ) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="p-2 flex flex-col lg:flex-row justify-between w-full">
+    <div class="order-2 lg:order-1">
+      <%= submit_tag "Filter",
+                     class: " mb-4 w-full lg:w-auto rounded-lg px-6 py-2 bg-green-500 text-white font-semibold hover:bg-green-600 focus:outline-none focus:bg-green-600 lg:mr-2 cursor-pointer" %>
+      <%= link_to "Reset Filters",
+                  url_for(controller: controller_name, action: action_name),
+                  class: "mb-2 text-center rounded-lg px-6 py-2 bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 focus:outline-none focus:bg-gray-300 lg:mr-2 cursor-pointer w-full lg:w-auto inline-block" %>
+    </div>
+  </div>
+<% end %>
