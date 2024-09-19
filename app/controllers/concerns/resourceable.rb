@@ -297,11 +297,9 @@ module Resourceable
   private
 
   def authorize_access
-    if authorize_by_model_actions.include?(action_name)
-      authorize :"Admin::#{resource_class}"
-    else
-      authorize @resource, policy_class: :"Admin::#{resource_class}"
-    end
+    model_action = authorize_by_model_actions.include?(action_name)
+    policy_class = "Admin::#{resource_class}Policy".constantize
+    authorize model_action ? resource_class : @resource, policy_class:
   end
 
   def resource_params
