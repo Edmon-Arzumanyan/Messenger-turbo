@@ -1,24 +1,34 @@
-# README
+### Environment Setup
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Create a local `.env` file based on `.env.template`: `cp .env.template .env`
 
-Things you may want to cover:
+Define database credentials in `.env`:
 
-* Ruby version
+```shell
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=wdpro
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=postgres
+```
 
-* System dependencies
+Define all other environment variables in `.env`.
 
-* Configuration
+### Database Setup
 
-* Database creation
+Start Postgres server with `pg_ctl start`
 
-* Database initialization
+Create and migrate the database:
 
-* How to run the test suite
+```shell
+rails db:create
+rails db:migrate
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### Seeding
 
-* Deployment instructions
+To seed the database with fake data: `rake db:seed`
 
-* ...
+## Running
+
+- Start all services: `foreman start -f Procfile.dev`
