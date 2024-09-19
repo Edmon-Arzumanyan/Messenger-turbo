@@ -1,0 +1,15 @@
+<%= render partial: "shared/sidebar" %>
+<div class="px-4 sm:ml-80">
+  <%= render partial: "shared/heading", locals: { title: "User Details" } %>
+  <div class="p-4 bg-white rounded-sm dark:bg-gray-700 owerflow-auto">
+    <%= image_tag @resource.image, size: "200x200" if @resource.image.present? %>
+    <%= render partial: "shared/form",
+               locals: admin_users_form_settings.merge(
+                 disabled: true,
+                 show_edit: true,
+                 show_delete: true,
+               ) %>
+
+    <%= render "shared/versions" %>
+  </div>
+</div>

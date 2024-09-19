@@ -1,0 +1,8 @@
+<%= render partial: "shared/sidebar" %>
+
+<div class="px-4 sm:ml-80 min-h-[90vh]">
+  <%= render partial: "shared/heading", locals: { title: "New User" } %>
+  <div class="p-6 bg-white rounded-sm dark:bg-gray-700 dark:text-white">
+    <%= render partial: "shared/form", locals: admin_users_form_settings %>
+  </div>
+</div>

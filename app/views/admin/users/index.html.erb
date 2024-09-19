@@ -1,0 +1,7 @@
+<%= render partial: "shared/sidebar" %>
+
+<div class="px-4 sm:ml-80">
+  <%= render partial: "shared/heading", locals: { title: "Users" } %>
+  <%= render partial: "shared/filter", locals: admin_users_filter_settings %>
+  <%= render partial: "shared/table", locals: admin_users_table_settings %>
+</div>
