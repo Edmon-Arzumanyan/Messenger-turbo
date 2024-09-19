@@ -22,6 +22,9 @@ Bundler.require(*Rails.groups)
 
 module Messanger
   class Application < Rails::Application
+    # Use the responders controller from the responders gem
+    config.app_generators.scaffold_controller :responders_controller
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.1
 
@@ -37,7 +40,7 @@ module Messanger
     #
     # config.eager_load_paths << Rails.root.join("extras")
 
-    config.time_zone = "Yerevan"
+    config.time_zone = 'Yerevan'
     config.active_record.default_timezone = :local
 
     # Don't generate system test files.

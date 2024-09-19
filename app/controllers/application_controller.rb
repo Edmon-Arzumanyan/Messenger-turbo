@@ -1,15 +1,27 @@
-# frozen_string_literal: true
+require 'application_responder'
 
 class ApplicationController < ActionController::Base
+  self.responder = ApplicationResponder
+  respond_to :html
+
+  include Pundit::Authorization
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  before_action :set_paper_trail_whodunnit
+
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :update_last_seen_at
 
   private
 
   def update_last_seen_at
-    if user_signed_in?
-      current_user.update(last_seen_at: Time.current)
-    end
+    return unless user_signed_in?
+
+    current_user.update(last_seen_at: Time.current)
+  end
+
+  def user_not_authorized
+    redirect_back_or_to root_path
   end
 
   protected
