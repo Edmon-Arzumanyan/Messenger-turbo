@@ -1,0 +1,27 @@
+<%= render partial: "shared/sidebar" %>
+<div class="px-4 sm:ml-80 min-h-[90vh]">
+  <%= render partial: "shared/heading", locals: { title: "Message Details" } %>
+  <div class="p-4 bg-white rounded-sm dark:bg-gray-700">
+    <%= render partial: "shared/form",
+               locals: admin_messages_form_settings.merge(
+                 disabled: true,
+                 show_edit: true,
+                 show_delete: true,
+               ) %>
+
+    <% if @resource.files.any? %>
+      <fieldset
+        class="my-4 flex flex-wrap p-4 mt-6 border border-gray-400 rounded-md"
+      >
+        <legend class="ml-4 font-bold text-md mode-strong"><%= t("files") %></legend>
+        <% @resource.files.each do |file| %>
+          <%= link_to file.filename,
+                      url_for(file),
+                      class: "ml-2 bg-blue-500 hover:bg-blue-600 border rounded-lg px-6 py-2 text-white whitespace-nowrap" %>
+        <% end %>
+      </fieldset>
+    <% end %>
+
+    <%= render "shared/versions" %>
+  </div>
+</div>

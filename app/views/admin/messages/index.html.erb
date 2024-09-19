@@ -1,0 +1,12 @@
+<%= render partial: "shared/sidebar" %>
+
+<div class="px-4 sm:ml-80">
+  <%= render partial: "shared/heading",
+             locals: {
+               title: "Messages",
+               search_path: admin_messages_path,
+             } %>
+
+  <%= render partial: "shared/filter", locals: admin_messages_filter_settings %>
+  <%= render partial: "shared/table", locals: admin_messages_table_settings %>
+</div>
