@@ -1,5 +1,6 @@
 class Message < ApplicationRecord
   has_ancestry
+  has_paper_trail ignore: [:last_seen_at], scope: -> { order('id desc') }
 
   belongs_to :user
   belongs_to :chat
@@ -7,15 +8,22 @@ class Message < ApplicationRecord
 
   validates :body, presence: true, unless: -> { files.attached? }
 
-  after_create_commit :mark_chat_as_read, :broadcast_message_to_users, :update_chat_display
-  after_update_commit :broadcast_message_update
+  after_create_commit :mark_chat_as_read, :broadcast_message_to_users, :update_chat_display, unless: -> { admin }
+  after_update_commit :broadcast_message_update, unless: -> { admin }
   # after_destroy_commit :broadcast_message_remove
 
   enum status: { unread: 0, read: 1 }
 
-  scope :after_last_discared_at, lambda { |chat|
-    where('created_at > ?', chat.last_discared_at)
+  scope :after_last_discarded_at, lambda { |chat|
+    where('created_at > ?', chat.last_discarded_at)
   }
+
+  pg_search_scope :search,
+                  associated_against: {
+                    user: %i[email first_name last_name]
+                  },
+                  against: %i[body],
+                  using: { tsearch: { prefix: true } }
 
   private
 

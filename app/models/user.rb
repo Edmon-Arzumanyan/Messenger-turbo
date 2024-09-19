@@ -1,24 +1,37 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  include PgSearch::Model
-
   devise :database_authenticatable,
          :registerable,
          :recoverable,
          :rememberable,
          :validatable
 
-  has_one_attached :image
-  has_many :initiated_chats, class_name: 'Chat', foreign_key: 'user_1_id'
-  has_many :received_chats, class_name: 'Chat', foreign_key: 'user_2_id'
+  has_paper_trail ignore: %i[last_seen_at encrypted_password], scope: -> { order('id desc') }
+
+  has_one_attached :image, dependent: :destroy
+  has_many :initiated_chats, class_name: 'Chat', foreign_key: 'user_1_id', dependent: :destroy
+  has_many :received_chats, class_name: 'Chat', foreign_key: 'user_2_id', dependent: :destroy
   has_many :messages, dependent: :destroy
 
-  after_update_commit :broadcast_user_update
+  after_update_commit :broadcast_user_update, unless: -> { admin }
 
   pg_search_scope :search,
                   against: %i[email first_name last_name],
                   using: { tsearch: { prefix: true } }
+
+  enum role: {
+    user: 0,
+    admin: 99
+  }
+
+  def active_for_authentication?
+    super && !discarded?
+  end
+
+  def to_s
+    full_name
+  end
 
   def full_name
     "#{first_name} #{last_name}".squish

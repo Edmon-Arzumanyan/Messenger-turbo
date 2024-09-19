@@ -1,3 +1,4 @@
+ap FactoryBot.create(:user, email: ENV['ADMIN_EMAIL'], role: 'admin')
 ap users = FactoryBot.create_list(:user, 20)
 
 users.each do |user|

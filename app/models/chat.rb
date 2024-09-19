@@ -1,15 +1,31 @@
 # frozen_string_literal: true
 
 class Chat < ApplicationRecord
+  has_paper_trail scope: -> { order('id desc') }
+
   belongs_to :user_1, class_name: 'User', foreign_key: 'user_1_id'
   belongs_to :user_2, class_name: 'User', foreign_key: 'user_2_id'
   has_many :messages, dependent: :destroy
 
+  validates :number, uniqueness: true
   validate :unique_user_pair
 
-  after_create_commit :broadcast_chat_prepend
-  after_discard :update_last_discarded_at
+  before_create :generate_chat_number
+  after_create_commit :broadcast_chat_prepend, unless: -> { admin }
+  after_discard :update_last_discarded_at, unless: -> { admin }
   # after_destroy_commit :broadcast_chat_remove
+
+  pg_search_scope :search,
+                  associated_against: {
+                    user_1: %i[email first_name last_name],
+                    user_2: %i[email first_name last_name]
+                  },
+                  against: [:number],
+                  using: { tsearch: { prefix: true } }
+
+  def to_s
+    number
+  end
 
   def chat_partner(current_user_id)
     if user_1_id == current_user_id
@@ -22,8 +38,8 @@ class Chat < ApplicationRecord
   end
 
   def unread_messages_count(user_id)
-    if last_discared_at.present?
-      Message.after_last_discared_at(self).unread.where.not(user_id:).count
+    if last_discarded_at.present?
+      Message.after_last_discarded_at(self).unread.where.not(user_id:).count
     else
       messages.unread.where.not(user_id:).count
     end
@@ -56,6 +72,13 @@ class Chat < ApplicationRecord
   end
 
   def update_last_discarded_at
-    update_column(:last_discared_at, discarded_at) if discarded_at
+    update_column(:last_discarded_at, discarded_at) if discarded_at
+  end
+
+  def generate_chat_number
+    last_chat_id = Chat.order(:id).last&.id || 0
+    hash = SecureRandom.hex(4)
+
+    self.number = "#{last_chat_id + 1}#{hash}"
   end
 end

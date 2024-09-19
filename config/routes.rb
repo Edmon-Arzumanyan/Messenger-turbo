@@ -9,4 +9,20 @@ Rails.application.routes.draw do
     resources :messages
     get 'reply-message/:id', to: 'messages#reply', as: 'reply_message'
   end
+
+  namespace :admin do
+    root 'users#index'
+
+    resources :users do
+      patch :toggle_activation, on: :member
+    end
+
+    resources :chats do
+      patch :toggle_activation, on: :member
+    end
+
+    resources :messages do
+      patch :toggle_activation, on: :member
+    end
+  end
 end
