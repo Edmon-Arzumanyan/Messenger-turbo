@@ -76,7 +76,7 @@ class User < ApplicationRecord
           user.updated_at,
           chat_count,
           message_count,
-          user.image.attached? ? url_for(user.image) : nil
+          user.image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(user.image, only_path: true) : nil
         ]
       end
     end
