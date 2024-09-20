@@ -1,59 +1,65 @@
 <% if versions.any? %>
   <div
     class="
-      h-full w-full items-center justify-center overflow-y-auto overflow-x-hidden
-      md:inset-0
+      my-4 relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full p-4 sm:p-5
     "
-    tabindex="-1"
   >
-    <div class="rounded-md bg-white p-4 shadow sm:p-5 dark:bg-gray-800">
-      <!-- Header -->
-      <div
-        class="
-          mb-4 flex items-center justify-between rounded-t border-b pb-4 sm:mb-5
-          dark:border-gray-600
-        "
-      >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">History</h3>
-      </div>
-      <div class="flex flex-col gap-4 h-96 overflow-y-scroll">
-        <% versions.each do |version| %>
-          <div class="s-box flex flex-col md:flex-row">
-            <div class="md:w-1/4">
-              <p class="s-label">
-                <%= time_ago_in_words(version.created_at) %>
-                ago
-              </p>
-              <p class="s-value">
-                by
-                <%= User.find_by(id: version.whodunnit) ||
-                      content_tag(:span, "system", class: "text-red-600") %>
-              </p>
-            </div>
-            <div class="md:w-3/4">
-              <% if version.object_changes.is_a?(Hash) %>
-                <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-                  <% version.object_changes.except(*version_excluded_fields).each do |attribute, changes| %>
-                    <li class="grid items-start py-2 first:pt-0 last:pb-0 md:grid-cols-3 md:gap-4">
-                      <p class="s-label">
-                        <%= version.item.class.human_attribute_name(attribute) %>
-                      </p>
-                      <p class="text-red-800 dark:text-red-300">
-                        <%= version_value(resource, attribute, changes[0]) %>
-                      </p>
-                      <p class="text-green-800 dark:text-green-300">
-                        <%= version_value(resource, attribute, changes[1]) %>
-                      </p>
-                    </li>
-                  <% end %>
-                </ul>
-              <% else %>
-                <p class="text-red-600">untracked change</p>
-              <% end %>
-            </div>
+    <!-- Header -->
+    <div
+      class="
+        mb-4 flex items-center justify-between rounded-t border-b pb-4
+        dark:border-gray-600
+      "
+    >
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">History</h3>
+    </div>
+    <div
+      class="
+        flex flex-col gap-4 h-96 overflow-y-scroll border-b border-gray-200
+        dark:border-gray-700
+      "
+    >
+      <% versions.each do |version| %>
+        <div
+          class="
+            flex flex-col md:flex-row gap-4 p-4 border-b border-gray-200
+            dark:border-gray-700
+          "
+        >
+          <div class="md:w-1/4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              <%= time_ago_in_words(version.created_at) %>
+              ago
+            </p>
+            <p class="text-base">
+              by
+              <%= User.find_by(id: version.whodunnit) ||
+                    content_tag(:span, "system", class: "text-red-600") %>
+            </p>
           </div>
-        <% end %>
-      </div>
+          <div class="md:w-3/4">
+            <% if version.object_changes.is_a?(Hash) %>
+              <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                <% version.object_changes.except(*version_excluded_fields).each do |attribute, changes| %>
+                  <li class="grid items-start py-2 first:pt-0 last:pb-0 md:grid-cols-3 md:gap-4">
+                    <p class="font-semibold text-gray-700 dark:text-gray-300">
+                      <%= version.item.class.human_attribute_name(attribute) %>
+                    </p>
+                    <p class="text-red-800 dark:text-red-300">
+                      <%= version_value(resource, attribute, changes[0]) %>
+                    </p>
+                    <p class="text-green-800 dark:text-green-300">
+                      <%= version_value(resource, attribute, changes[1]) %>
+                    </p>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-red-600">untracked change</p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 <% end %>

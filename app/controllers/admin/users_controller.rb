@@ -15,6 +15,12 @@ class Admin::UsersController < ApplicationController
     results
   end
 
+  def log_in_as_user
+    sign_in(@resource, scope: :user)
+    flash[:success] = "Logged in as #{@resource}"
+    redirect_to root_path
+  end
+
   ##############################################################################
   # resources
   ##############################################################################
@@ -74,7 +80,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def set_resource
-    @resource = User.find_by_id(params[:id])
+    @resource = User.find_by_id(params[:id] || params[:user_id])
     return if @resource
 
     redirect_to path_index, alert: t('alerts.not_found')

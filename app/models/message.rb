@@ -1,3 +1,5 @@
+require 'csv'
+
 class Message < ApplicationRecord
   has_ancestry
   has_paper_trail ignore: [:last_seen_at], scope: -> { order('id desc') }
@@ -24,6 +26,35 @@ class Message < ApplicationRecord
                   },
                   against: %i[body],
                   using: { tsearch: { prefix: true } }
+
+  def to_s
+    "Message ##{id}"
+  end
+
+  def self.to_csv(messages)
+    CSV.generate(headers: true) do |csv|
+      csv << %w[ID User ChatNumber Body Status IsEdited CreatedAt UpdatedAt DiscardedAt FileURLs]
+
+      messages.find_each do |message|
+        file_urls = message.files.map do |file|
+          Rails.application.routes.url_helpers.rails_blob_url(file, only_path: true)
+        end.join(', ')
+
+        csv << [
+          message.id,
+          message.user.full_name,
+          message.chat.number,
+          message.body,
+          message.status,
+          message.is_edited,
+          message.created_at,
+          message.updated_at,
+          message.discarded_at,
+          file_urls
+        ]
+      end
+    end
+  end
 
   private
 

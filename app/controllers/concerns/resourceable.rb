@@ -39,6 +39,9 @@ module Resourceable
     respond_to do |format|
       format.html
       format.json { render json: @resources }
+      format.csv do
+        send_data resource_class.to_csv(@resources), filename: "#{resource_class}-#{Date.today}.csv"
+      end
     end
   end
 

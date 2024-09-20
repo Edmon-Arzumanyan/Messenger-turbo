@@ -1,8 +1,9 @@
 <%= render partial: "shared/sidebar" %>
 <div class="px-4 sm:ml-80">
   <%= render partial: "shared/heading", locals: { title: "User Details" } %>
-  <div class="p-4 bg-white rounded-sm dark:bg-gray-700 owerflow-auto">
+  <div class="p-4 bg-white rounded-sm dark:bg-gray-700 overflow-auto">
     <%= image_tag @resource.image, size: "200x200" if @resource.image.present? %>
+
     <%= render partial: "shared/form",
                locals: admin_users_form_settings.merge(
                  disabled: true,
@@ -10,6 +11,15 @@
                  show_delete: true,
                ) %>
 
+    <%= button_to "Login as #{@resource}",
+                  admin_user_login_as_path(@resource),
+                  method: :post,
+                  data: {
+                    turbo: false,
+                  },
+                  class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" %>
+
+    <%= render "activity" %>
     <%= render "shared/versions" %>
   </div>
 </div>

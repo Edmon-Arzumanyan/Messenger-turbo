@@ -10,7 +10,7 @@ module Admin::MessagesHelper
     ]
 
     body = [
-      { call: ->(message) { link_to 'show', admin_message_path(message), class: 'table-link' } },
+      { call: ->(message) { link_to message, admin_message_path(message), class: 'table-link' } },
       { call: ->(message) { message.body.truncate(100) } },
       { call: ->(message) { link_to message.user.full_name, admin_user_path(message.user), class: 'table-link' } },
       { call: ->(message) { link_to message.chat.number, admin_chat_path(message.chat), class: 'table-link' } },
@@ -63,8 +63,11 @@ module Admin::MessagesHelper
         { attribute: :query, type: :text_field, placeholder: 'Search by body or user' },
         { attribute: :user, type: :select, options: User.all.map { |u| [u.full_name, u.id] }, prompt: 'Select user' },
         { attribute: :chat, type: :select, options: Chat.all.map { |c| [c.number, c.id] }, prompt: 'Select chat' },
-        { attribute: :archive_states, type: :select,
-          options: { 'All' => 'all', 'Active' => 'active', 'Archived' => 'archived' }, prompt: 'Select Archive State' },
+        { attribute: :status, type: :select, options: Message.statuses.map do |k, v|
+          [k.humanize, v]
+        end, prompt: 'Select status' },
+        { attribute: :archive_states, type: :select, options: { 'Active' => 'active', 'Archived' => 'archived' },
+          prompt: 'Select Archive State' },
         { attribute: :created_from, type: :date_field, placeholder: 'Created From' },
         { attribute: :created_to, type: :date_field, placeholder: 'Created To' },
         { attribute: :archived_from, type: :date_field, placeholder: 'Archived From' },

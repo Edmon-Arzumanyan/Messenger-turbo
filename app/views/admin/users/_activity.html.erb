@@ -1,0 +1,68 @@
+<% if @resource.activity.any? %>
+  <div
+    class="
+      relative bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full p-4 sm:p-5
+    "
+  >
+    <!-- Header -->
+    <div
+      class="
+        mb-4 flex items-center justify-between rounded-t border-b pb-4
+        dark:border-gray-600
+      "
+    >
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Activity</h3>
+    </div>
+
+    <div
+      class="
+        flex flex-col gap-4 h-96 overflow-y-scroll border-b border-gray-200
+        dark:border-gray-700
+      "
+    >
+      <% @resource.activity.each do |version| %>
+        <% item = version.item_type.constantize.find_by(id: version.item_id) %>
+
+        <div
+          class="
+            flex flex-col md:flex-row gap-4 p-4 border-b border-gray-200
+            dark:border-gray-700
+          "
+        >
+          <div class="md:w-1/4">
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              <%= time_ago_in_words(version.created_at) %>
+              ago
+            </p>
+            <p class="text-base">
+              <%= version.event %><br>
+              <%= version.item_type.constantize.model_name.human %>
+              <% if item %>
+                <%= link_to item, [:admin, item], class: "text-blue-500 hover:underline" %>
+              <% else %>
+                [deleted record ID -
+                <%= version.item_id %>]
+              <% end %>
+            </p>
+          </div>
+
+          <div class="md:w-3/4">
+            <% if item && version.changeset.is_a?(Hash) %>
+              <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                <% version.changeset.each do |attribute, values| %>
+                  <li class="grid items-start py-2 first:pt-0 last:pb-0 md:grid-cols-3 md:gap-4">
+                    <p class="font-semibold text-gray-700 dark:text-gray-300"><%= version.item.class.human_attribute_name(attribute) %></p>
+                    <p class="text-red-500"><%= version_value(item, attribute, values[0]) %></p>
+                    <p class="text-green-500"><%= version_value(item, attribute, values[1]) %></p>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-red-600">untracked or deleted change</p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     root 'users#index'
 
     resources :users do
+      post '/login-as', to: 'users#log_in_as_user', as: 'login_as'
       patch :toggle_activation, on: :member
     end
 

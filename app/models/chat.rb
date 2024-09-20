@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+require 'csv'
 
 class Chat < ApplicationRecord
   has_paper_trail scope: -> { order('id desc') }
@@ -47,6 +47,27 @@ class Chat < ApplicationRecord
 
   def broadcast_chat_undiscard(partner)
     broadcast_prepend_to [partner, 'chats'], partial: 'chats/chat', locals: { chat: self, user: partner }
+  end
+
+  def self.to_csv(chats)
+    attributes = %w[id user_1 user_2 number messages_count created_at updated_at discarded_at]
+
+    CSV.generate(headers: true) do |csv|
+      csv << attributes
+
+      chats.find_each do |chat|
+        csv << [
+          chat.id,
+          chat.user_1.full_name,
+          chat.user_2.full_name,
+          chat.number,
+          chat.messages.count,
+          chat.created_at,
+          chat.updated_at,
+          chat.discarded_at
+        ]
+      end
+    end
   end
 
   private

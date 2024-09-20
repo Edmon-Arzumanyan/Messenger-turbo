@@ -33,8 +33,11 @@
       <%= submit_tag "Filter",
                      class: " mb-4 w-full lg:w-auto rounded-lg px-6 py-2 bg-green-500 text-white font-semibold hover:bg-green-600 focus:outline-none focus:bg-green-600 lg:mr-2 cursor-pointer" %>
       <%= link_to "Reset Filters",
-                  url_for(controller: controller_name, action: action_name),
+                  index_path,
                   class: "mb-2 text-center rounded-lg px-6 py-2 bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 focus:outline-none focus:bg-gray-300 lg:mr-2 cursor-pointer w-full lg:w-auto inline-block" %>
+      <%= link_to "Export csv",
+                  url_for(request.params.merge(format: "csv")),
+                  class: "mb-4 w-full lg:w-auto rounded-lg px-6 py-2 bg-blue-500 text-white font-semibold hover:bg-blue-600 focus:outline-none focus:bg-blue-600 lg:mr-2 cursor-pointer" %>
     </div>
   </div>
 <% end %>
