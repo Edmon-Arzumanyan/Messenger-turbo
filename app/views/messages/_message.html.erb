@@ -1,6 +1,7 @@
 <%= turbo_stream_from [user, message] %>
 <%= turbo_frame_tag message do %>
-  <% message_class = message.user == user ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800" %>
+  <% message_class =
+    message.user == user ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800" %>
   <% message_align = message.user == user ? "items-end" : "items-start" %>
 
   <div
@@ -26,9 +27,11 @@
           </div>
         <% else %>
           <p
-            class="<%= message.user == user ? 'border-r-2 pr-2' : 'border-l-2 pl-2' %> border-gray-800 text-gray-500 italic"
+            class="
+              <%= message.user == user ? 'border-r-2 pr-2' : 'border-l-2 pl-2' %> border-gray-800 text-gray-500 italic
+            "
           >
-          Message Deleted
+            Message Deleted
           </p>
         <% end %>
       <% end %>
@@ -103,30 +106,30 @@
           <% end %>
 
           <%= link_to "Reply",
-                      chat_reply_message_path(message.chat, message),
-                      data: {
-                        turbo_stream: true,
-                      },
-                      class: "text-blue-500 hover:underline" %>
+          chat_reply_message_path(message.chat, message),
+          data: {
+            turbo_stream: true,
+          },
+          class: "text-blue-500 hover:underline" %>
 
           <% if message.user == user %>
             <div class="flex space-x-3 mt-2">
               <%= link_to "Edit",
-                          edit_chat_message_path(message.chat, message),
-                          data: {
-                            turbo_stream: true,
-                          },
-                          class:
-                            "bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200" %>
+              edit_chat_message_path(message.chat, message),
+              data: {
+                turbo_stream: true,
+              },
+              class:
+                "bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200" %>
 
               <%= button_to "Delete",
-                            [message.chat, message],
-                            method: :delete,
-                            class:
-                              "bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200",
-                            data: {
-                              turbo_confirm: "Are you sure you want to delete this message?",
-                            } %>
+              [message.chat, message],
+              method: :delete,
+              class:
+                "bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-3 rounded-full text-xs transition duration-200",
+              data: {
+                turbo_confirm: "Are you sure you want to delete this message?",
+              } %>
             </div>
           <% end %>
         </div>
@@ -137,8 +140,10 @@
   </div>
 
   <script type='text/javascript'>
-    div.scrollTo(0, div.scrollHeight);
-    message.value = '';
-    files.value = '';
+    setTimeout(() => {
+      div.scrollTo(0, div.scrollHeight);
+      message.value = '';
+      files.value = '';
+    }, 200);
   </script>
 <% end %>
