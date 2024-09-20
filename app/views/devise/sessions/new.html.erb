@@ -1,14 +1,14 @@
-<div class="container mx-auto mt-2 mb-2">
-  <h2 class="text-2xl font-bold mb-6">Log in</h2>
+<div class="div-container">
+  <h2 class="h2-title">Log in</h2>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), data: { turbo: false }) do |f| %>
     <div class="mb-2">
-      <%= f.label :email, class: "label" %><br/>
+      <%= f.label :email, class: "label" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "input" %>
     </div>
 
     <div class="mb-2">
-      <%= f.label :password, class: "label" %><br/>
+      <%= f.label :password, class: "label" %>
       <%= f.password_field :password, autocomplete: "current-password", class: "input" %>
     </div>
 
@@ -19,7 +19,7 @@
       </div>
     <% end %>
 
-    <div class="mt-6">
+    <div class="mt-4">
       <%= f.submit "Log in", class: "submit-button" %>
     </div>
   <% end %>

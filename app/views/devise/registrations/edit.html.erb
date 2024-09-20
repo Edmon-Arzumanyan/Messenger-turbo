@@ -1,5 +1,6 @@
-<div class="container mx-auto mt-2 mb-2">
-  <h2 class="text-2xl font-bold mb-2">Edit <%= resource_name.to_s.humanize %></h2>
+<div class="div-container">
+  <h2 class="h2-title">Edit
+    <%= resource_name.to_s.humanize %></h2>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }, data: { turbo: false }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
@@ -31,7 +32,8 @@
 
     <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
       <div class="text-sm text-yellow-600">
-        Currently waiting confirmation for: <%= resource.unconfirmed_email %>
+        Currently waiting confirmation for:
+        <%= resource.unconfirmed_email %>
       </div>
     <% end %>
 
@@ -40,19 +42,24 @@
       <i class="text-sm text-gray-500">(leave blank if you don't want to change it)</i>
       <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
       <% if @minimum_password_length %>
-        <em class="text-xs text-gray-500"><%= @minimum_password_length %> characters minimum</em>
+        <em class="text-xs text-gray-500"><%= @minimum_password_length %>
+          characters minimum</em>
       <% end %>
     </div>
 
     <div class="field mb-2">
       <%= f.label :password_confirmation, class: "label" %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+      <%= f.password_field :password_confirmation,
+                           autocomplete: "new-password",
+                           class: "input" %>
     </div>
 
     <div class="field mb-2">
       <%= f.label :current_password, class: "label" %>
       <i class="text-sm text-gray-500">(we need your current password to confirm your changes)</i>
-      <%= f.password_field :current_password, autocomplete: "current-password", class: "input" %>
+      <%= f.password_field :current_password,
+                           autocomplete: "current-password",
+                           class: "input" %>
     </div>
 
     <div class="flex gap-2">

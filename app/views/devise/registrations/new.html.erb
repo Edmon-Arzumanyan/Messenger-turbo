@@ -1,5 +1,5 @@
-<div class="container mx-auto mt-2 mb-2">
-  <h2 class="text-2xl font-bold mb-6">Sign up</h2>
+<div class="div-container">
+  <h2 class="h2-title">Sign up</h2>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }) do |f| %>
     <%= render "devise/shared/error_messages", resource: resource %>
@@ -32,14 +32,17 @@
     <div class="mb-2">
       <%= f.label :password, class: "label" %>
       <% if @minimum_password_length %>
-        <em class="text-sm text-gray-600">(<%= @minimum_password_length %> characters minimum)</em>
+        <em class="text-sm text-gray-600">(<%= @minimum_password_length %>
+          characters minimum)</em>
       <% end %>
       <%= f.password_field :password, autocomplete: "new-password", class: "input" %>
     </div>
 
     <div class="mb-2">
       <%= f.label :password_confirmation, class: "label" %>
-      <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "input" %>
+      <%= f.password_field :password_confirmation,
+                           autocomplete: "new-password",
+                           class: "input" %>
     </div>
 
     <div class="mt-6">
