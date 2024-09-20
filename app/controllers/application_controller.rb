@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   before_action :set_paper_trail_whodunnit
-
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :update_last_seen_at
 

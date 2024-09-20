@@ -5,6 +5,7 @@ class Admin::MessagesController < ApplicationController
     results = results.search(params[:query]) if params[:query].present?
     results = results.where(user_id: params[:user]) if params[:user].present?
     results = results.where(chat_id: params[:chat]) if params[:chat].present?
+    results = results.where(status: params[:status]) if params[:status].present?
 
     results
   end
