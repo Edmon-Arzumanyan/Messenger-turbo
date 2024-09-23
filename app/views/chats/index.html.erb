@@ -73,13 +73,15 @@
 
     <main class="w-full sm:ml-96 bg-gray-100 overflow-auto">
       <%= turbo_frame_tag "#{current_user.id}_show" do %>
-        <%= render partial: "chats/show",
-                   locals: {
-                     user: current_user,
-                     messages: @messages,
-                     message: Message.new,
-                     chat: @chat,
-                   } %>
+        <%= if @chat.present?
+              render partial: "chats/show",
+                     locals: {
+                       user: current_user,
+                       messages: @messages,
+                       message: Message.new,
+                       chat: @chat,
+                     }
+            end %>
       <% end %>
     </main>
   </div>

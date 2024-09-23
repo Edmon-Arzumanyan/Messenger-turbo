@@ -8,8 +8,8 @@ class ChatsController < ApplicationController
     @chats = current_user.chats.kept.order(updated_at: :desc)
     @users = User.none
 
-    @chat = session_last_chat || current_user.chats.last
-    @messages = load_messages
+    @chat = session_last_chat || current_user.chats.kept.last
+    @messages = load_messages if @chat.present?
 
     filter_users if params[:query].present?
 
