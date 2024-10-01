@@ -89,6 +89,7 @@ module Resourceable
           flash[:alert] = @resource.errors.full_messages.join(',')
           redirect_to path_edit
         end
+
         format.json { render json: @resource.errors, status: :unprocessable_entity }
       end
     end
@@ -105,7 +106,7 @@ module Resourceable
       else
         format.html do
           flash[:alert] = resource.errors.full_messages.join(', ')
-          redirect_to path_show
+          redirect_to path_show(@resource)
         end
 
         format.json { render json: @resource.errors, status: :unprocessable_entity }

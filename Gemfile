@@ -93,6 +93,21 @@ group :development, :test do
   # A library for generating fake data
   gem 'faker'
 
+  # Step-by-step debugging and stack navigation in Pry
+  gem 'pry-byebug'
+
+  # MRI Core documentation and source code for Pry
+  gem 'pry-doc'
+
+  # Commands to work with gems within Pry
+  gem 'pry-gem'
+
+  # Powerful alternative to the standard IRB shell
+  gem 'pry-rails'
+
+  # Brings back `assigns` and `assert_template` to your Rails tests
+  gem 'rails-controller-testing'
+
   # RSpec for Rails 6+
   gem 'rspec-rails'
 end

@@ -50,7 +50,7 @@ class Chat < ApplicationRecord
   end
 
   def self.to_csv(chats)
-    attributes = %w[id user_1 user_2 number messages_count created_at updated_at discarded_at]
+    attributes = %w[ID user_1 user_2 number messages_count created_at updated_at discarded_at]
 
     CSV.generate(headers: true) do |csv|
       csv << attributes

@@ -2,8 +2,6 @@ class Admin::UsersController < ApplicationController
   include Resourceable
 
   def filter(results)
-    results = results.search(params[:query]) if params[:query].present?
-
     if params[:last_seen_from].present?
       results = results.where('last_seen_at >= ?', params[:last_seen_from].to_date.beginning_of_day)
     end
@@ -17,6 +15,7 @@ class Admin::UsersController < ApplicationController
 
   def log_in_as_user
     sign_in(@resource, scope: :user)
+
     flash[:success] = "Logged in as #{@resource}"
     redirect_to root_path
   end

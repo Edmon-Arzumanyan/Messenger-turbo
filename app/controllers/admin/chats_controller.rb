@@ -2,7 +2,6 @@ class Admin::ChatsController < ApplicationController
   include Resourceable
 
   def filter(results)
-    results = results.search(params[:query]) if params[:query].present?
     results = results.where(user_1_id: params[:user_1]) if params[:user_1].present?
     results = results.where(user_2_id: params[:user_2]) if params[:user_2].present?
 
