@@ -1,4 +1,4 @@
-### Environment Setup
+### Environment Setup 
 
 Create a local `.env` file based on `.env.template`: `cp .env.template .env`
 
